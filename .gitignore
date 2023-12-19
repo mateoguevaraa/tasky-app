@@ -1,1 +1,4 @@
 myenv/
+users.db
+__pycache__
+instance/
