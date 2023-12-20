@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask, session, redirect, render_template, request
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -34,14 +34,11 @@ class Task(db.Model):
     task_name = db.Column(db.String(100), nullable=False)
     user = db.relationship('User', backref='tasks')  # Establish a relationship with the User table
 
-with app.app_context():
-    db.create_all()
-
-
 
 @app.route("/")
 def inicio():
-    return 'ok'
+    session.clear()
+    return render_template("layout.html")
 
 
 if __name__ == "__main__":
