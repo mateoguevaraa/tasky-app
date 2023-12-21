@@ -23,8 +23,9 @@
 {% endblock %}
 
 {% block main %}
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <h1 class="home-h1 text-center my-3">
-        Welcome to <span class="tasky">Tasky()</span>
+        Welcome to <span class="tasky" id="auto-input"></span>
     </h1>
     <p class="text-muted text-center slogan">The Developer's Task Manager</p>
 
@@ -51,4 +52,12 @@
             </li>
         </ul>
     </div>
+    <script>
+        var typed = new Typed('#auto-input', {
+          strings: ['Tasky()'],
+          typeSpeed: 120,
+          backSpeed: 150,
+        // loop: true
+        });
+      </script>
 {% endblock %}
