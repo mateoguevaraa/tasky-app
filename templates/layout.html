@@ -1,92 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Page title and description for SEO -->
-    <title>Tasky: {% block title %}{% endblock %}</title>
-    <meta name="description" content="Tasky is a task manager to boost productivity">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- Page title and description for SEO -->
+        <title>Tasky: {% block title %}{% endblock %}</title>
+        <meta name="description" content="Tasky is a task manager to boost productivity">
 
-    <!-- Meta tags for better indexing -->
-    <meta name="robots" content="index, nofollow">
-    <meta name="author" content="Mateo Guevara">
+        <!-- Meta tags for better indexing -->
+        <meta name="robots" content="index, nofollow">
+        <meta name="author" content="Mateo Guevara">
 
-    <!-- Open Graph metadata (for social media sharing) -->
-    <!-- <meta property="og:title" content="Tasky">
-    <meta property="og:description" content="Tasky is a task manager to boost productivity">
-    <meta property="og:image" content="URL to an image for social media sharing">
-    <meta property="og:url" content="URL of your webpage">
-    <meta property="og:type" content="website"> -->
+        <!-- Open Graph metadata (for social media sharing) -->
+        <!-- <meta property="og:title" content="Tasky">
+        <meta property="og:description" content="Tasky is a task manager to boost productivity">
+        <meta property="og:image" content="URL to an image for social media sharing">
+        <meta property="og:url" content="URL of your webpage">
+        <meta property="og:type" content="website"> -->
 
-    <!-- Twitter Card metadata -->
-    <!-- <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Your Page Title">
-    <meta name="twitter:description" content="Description of your webpage for Twitter">
-    <meta name="twitter:image" content="URL to an image for Twitter sharing"> -->
+        <!-- Twitter Card metadata -->
+        <!-- <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Your Page Title">
+        <meta name="twitter:description" content="Description of your webpage for Twitter">
+        <meta name="twitter:image" content="URL to an image for Twitter sharing"> -->
 
-    <!-- Favicon -->
-    <!-- <link rel="icon" type="image/png" href="path/to/favicon.png"> -->
+        <!-- Favicon -->
+        <!-- <link rel="icon" type="image/png" href="path/to/favicon.png"> -->
 
-    <!-- Accessibility -->
-    <!-- <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> -->
+        <!-- Accessibility -->
+        <!-- <meta name="theme-color" content="#ffffff">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> -->
 
-    <!-- CSS/JS files -->
-    <link rel="stylesheet" href="/static/style.css">
-    <!-- <script src="path/to/scripts.js" defer></script> -->
+        <!-- CSS/JS files -->
+        <link rel="stylesheet" href="/static/style.css">
+        <!-- <script src="path/to/scripts.js" defer></script> -->
 
-    <!-- Canonical link (for specifying the preferred URL) -->
-    <!-- <link rel="canonical" href="URL of your preferred webpage"> -->
-    
-    <!-- bootstrap library -->
-    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
-    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
-    <style>
-        body {
-            font-family: 'Fira Code', monospace;
-            background-color: #1e1e1e;
-            color: #ffffff;
-        }
-    </style>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
-        <div class="container-fluid">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <a class="navbar-brand" href="#">Tasky()</a>
-          <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% block nav %}
-                <!-- for every link I have to add if active:
-                     aria-current="page" 
-                     active (in the class)
-                I have to copy this inside the block and add the necessary links.
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li> -->
-              {% endblock %}
-              {% block body%}
-              {% endblock %}
-            </ul>
-          </div>
-        </div>
-      </nav>
-</body>
-<footer class="text-light text-center py-3" style="background-color: #333333;">
-    <div class="container">
-      <p>&copy; 2023 Tasky. All rights reserved.</p>
+        <!-- Canonical link (for specifying the preferred URL) -->
+        <!-- <link rel="canonical" href="URL of your preferred webpage"> -->
+        
+        <!-- bootstrap library -->
+        <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+        <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
+        <style>
+            body {
+                font-family: 'Fira Code', monospace;
+                background-color: #1e1e1e;
+                color: #ffffff;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand color-nav-brand" href="/">Tasky<span style=" color: #F68807;">()</span></a>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        {% block body %}
+                    <!-- for every link I have to add if active:
+                        aria-current="page" 
+                        active (in the class)
+                    I have to copy this inside the block and add the necessary links.
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li> -->
+        {% endblock %}
+                </div>
+            </div>
+        </nav>
+    </body>
+    <div class="content">
+        <main>
+            {% block main %}{% endblock %}
+        </main>
     </div>
-  </footer>
-
+    <footer class="text-light text-center py-3" style="background-color: #333333;">
+        <div class="container">
+        <p>&copy; 2023 Tasky. All rights reserved.</p>
+        </div>
+    </footer>
+    
 </html>

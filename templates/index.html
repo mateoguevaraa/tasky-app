@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+{% block body %}
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="#">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Log In</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block main %}
+    <h1 class="home-h1 text-center my-3">
+        Welcome to <span class="tasky">Tasky()</span>
+    </h1>
+    <p class="text-muted text-center slogan">The Developer's Task Manager</p>
+
+    <p class="text-center intro mb-5" id="about">
+        Tasky is a powerful task manager <span class="tasky">designed specifically for developers</span>, 
+        providing an intuitive and efficient way to track your project progress, 
+        manage tasks, and streamline your workflow.
+    </p>
+    <div id="features">
+        <h3 class="text-left subtitle font-weight-bold">Features</h3>
+        <br>
+        <ul class="intro">
+            <li>
+                <span>Effortless Task Tracking:</span> Organize your tasks, set priorities, and monitor progress effortlessly.
+            </li>
+            <br>
+            <li>
+                <span>Developer-Centric Interface:</span> Experience an interface designed to resemble a familiar coding environment, 
+                making task management intuitive for developers.
+            </li>
+            <br>
+            <li>
+                <span>Project Management Made Simple:</span> Seamlessly manage multiple projects and stay on top of deadlines.
+            </li>
+        </ul>
+    </div>
+{% endblock %}

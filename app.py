@@ -38,9 +38,8 @@ class Task(db.Model):
 @app.route("/")
 def inicio():
     session.clear()
-    return render_template("layout.html")
+    return render_template("index.html")
 
 
 if __name__ == "__main__":
-    db.create_all()
     app.run(debug=True)

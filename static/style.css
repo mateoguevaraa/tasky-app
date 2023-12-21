@@ -1,5 +1,56 @@
-body {
-    font-family: 'Fira Code', monospace;
-    background-color: #1e1e1e;
-    color: #ffffff;
-  }
+
+@media screen and (max-width: 322px) {
+    nav, footer {
+        min-width: 480px;
+    }
+    
+    body, main {
+        min-width: 400px;
+    }
+}
+
+.content {
+    max-width: 960px;
+    margin: auto;
+}
+
+main {
+    margin-left: 3.3rem;
+    margin-right: 3.3rem;
+}
+
+.home-h1 {
+    font-size: 4rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    padding-top: 7rem;
+}
+
+.slogan {
+    padding-top: 0.3rem;
+    padding-bottom: 3.1rem;
+}
+
+.tasky {
+    color: #F68807;
+}
+
+.intro {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #dddddd;
+}
+
+.subtitle {
+    font-size: 1.6rem;
+    color: white;
+    padding-top: 5rem;
+}
+
+#features li span {
+    color:#F68807;
+}
+
+footer {
+    margin-top: 7rem;
+}
