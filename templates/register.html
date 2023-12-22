@@ -21,10 +21,14 @@
 {% endblock %}
 
 {% block main %}
+    <h1 class="text-center my-3 pb-1" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">def </span><span style="color: rgba(255, 253, 159, 0.783)">Register</span><span style="color: rgb(241, 185, 0)">()</span></h1>
     <div class="container-fluid">
         <div class="row align-items-center justify-content-center">
-            <div class="col rounded p-4 shadow register-box">
+            <div class="col rounded p-4 shadow register-box pb-2">
                 <form class="register-form">
+                    <div class="form-group mb-4">
+                        <input type="text" class="form-control mt-1" id="username" aria-describedby="username" placeholder="// Username">
+                    </div>
                     <div class="form-group mb-4">
                         <input type="email" class="form-control mt-1" id="email" aria-describedby="emailHelp" placeholder="// Email">
                     </div>
@@ -32,7 +36,7 @@
                         <input type="password" class="form-control mt-1" id="password" placeholder="// Password">
                     </div>
                     <div class="form-group mb-4">
-                        <input type="password" class="form-control mt-1" id="password-confirm" placeholder="// Confirm Password">
+                        <input type="password" class="form-control mt-1" id="password-confirm" placeholder="// Confirm_Password">
                     </div>
                     <div class="register-button mb-4 d-grid gap-4">
                         <button type="submit" class="btn" style="background-color:#F68807; color: #1e1e1e;">Register</button>

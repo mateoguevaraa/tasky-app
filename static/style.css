@@ -29,9 +29,9 @@ flex: none; /* Fix header and footer heights */
 }
 
 main {
-flex: 1; /* Allow main content to fill available space */
-margin-top: 7rem; /* Adjust as needed */
-margin-bottom: 7rem; /* Adjust as needed */
+    flex: 1; /* Allow main content to fill available space */
+    margin-top: 5rem; /* Adjust as needed */
+    margin-bottom: 5rem; /* Adjust as needed */
 }
 
 .content {
