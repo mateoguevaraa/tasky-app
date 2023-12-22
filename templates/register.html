@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block header %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link" href="/">Home</a>
+    </li>
+</ul>
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link active" href="/register"  aria-current="page">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row align-items-center justify-content-center">
+            <div class="col rounded p-4 shadow register-box">
+                <form class="register-form">
+                    <div class="form-group mb-4">
+                        <input type="email" class="form-control mt-1" id="email" aria-describedby="emailHelp" placeholder="// Email">
+                    </div>
+                    <div class="form-group mb-4">
+                        <input type="password" class="form-control mt-1" id="password" placeholder="// Password">
+                    </div>
+                    <div class="form-group mb-4">
+                        <input type="password" class="form-control mt-1" id="password-confirm" placeholder="// Confirm Password">
+                    </div>
+                    <div class="register-button mb-4 d-grid gap-4">
+                        <button type="submit" class="btn" style="background-color:#F68807; color: #1e1e1e;">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

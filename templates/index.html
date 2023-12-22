@@ -3,7 +3,7 @@
 {% block title %}
     Home
 {% endblock %}
-{% block body %}
+{% block header %}
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
             <a class="nav-link" href="#about">About</a>
@@ -14,20 +14,29 @@
     </ul>
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         <li class="nav-item">
-            <a class="nav-link" href="#">Register</a>
+            <a class="nav-link" href="/register">Register</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Log In</a>
+            <a class="nav-link" href="/login">Login</a>
         </li>
     </ul>
 {% endblock %}
 
 {% block main %}
+    <style>
+        @media screen and (max-width: 768px){
+            .home-h1 {
+                font-size: 3.08rem;
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+        }
+    </style>
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <h1 class="home-h1 text-center my-3">
         Welcome to <span class="tasky" id="auto-input"></span>
     </h1>
-    <p class="text-muted text-center slogan">The Developer's Task Manager</p>
+    <p class="text-center slogan">// The Developer's Task Manager</p>
 
     <p class="text-center intro mb-5" id="about">
         Tasky is a powerful task manager <span class="tasky">designed specifically for developers</span>, 
@@ -57,7 +66,8 @@
           strings: ['Tasky()'],
           typeSpeed: 120,
           backSpeed: 150,
-        // loop: true
+          loop: true,
+          loopCount: 2
         });
       </script>
 {% endblock %}

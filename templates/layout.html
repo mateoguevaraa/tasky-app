@@ -54,34 +54,45 @@
         </style>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand color-nav-brand" href="/">Tasky<span style=" color: #F68807;">()</span></a>
-                <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-        {% block body %}
-                    <!-- for every link I have to add if active:
-                        aria-current="page" 
-                        active (in the class)
-                    I have to copy this inside the block and add the necessary links.
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li> -->
-        {% endblock %}
+        <style>
+        @media screen and (min-width: 768px) {
+            .navbar.navbar-expand-lg.navbar-dark {
+                position: -webkit-sticky;
+                position: sticky; 
+                top: 0; 
+                z-index: 1071;
+            }
+        }
+        </style>
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #333333;">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand color-nav-brand" href="/">Tasky<span style=" color: #F68807;">()</span></a>
+                    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+            {% block header %}
+                        <!-- for every link I have to add if active:
+                            aria-current="page" 
+                            active (in the class)
+                        I have to copy this inside the block and add the necessary links.
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Features</a>
+                        </li> -->
+            {% endblock %}
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </body>
+            </nav>
+        </header>
     <div class="content">
-        <main>
+        <main class="limited-height">
             {% block main %}{% endblock %}
         </main>
     </div>
@@ -90,5 +101,5 @@
         <p>&copy; 2023 Tasky. All rights reserved.</p>
         </div>
     </footer>
-    
+</body>
 </html>

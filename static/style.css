@@ -1,12 +1,37 @@
 
 @media screen and (max-width: 322px) {
-    nav, footer {
-        min-width: 480px;
+    header {
+        max-width: 480px;
+        top: 0;
     }
     
-    body, main {
+    footer {
+        max-width: 480px;
+        bottom: 0;
+    }
+    
+    body {
         min-width: 400px;
     }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure full viewport height */
+}
+
+header,
+footer {
+flex: none; /* Fix header and footer heights */
+}
+
+main {
+flex: 1; /* Allow main content to fill available space */
+margin-top: 7rem; /* Adjust as needed */
+margin-bottom: 7rem; /* Adjust as needed */
 }
 
 .content {
@@ -23,12 +48,12 @@ main {
     font-size: 4rem;
     margin-bottom: 10px;
     font-weight: 700;
-    padding-top: 7rem;
 }
 
 .slogan {
     padding-top: 0.3rem;
     padding-bottom: 3.1rem;
+    color: rgba(0, 255, 0, 0.47);
 }
 
 .tasky {
@@ -51,6 +76,19 @@ main {
     color:#F68807;
 }
 
-footer {
-    margin-top: 7rem;
+
+.login-box, .register-box {
+    background-color: #2A2A2A;
+    width: 100%;
+    max-width: calc(100vw - 2rem);
+    box-sizing: border-box;
+}
+
+#remind-button:checked {
+    background-color: #F68807;
+}
+
+#forgot-pw {
+    margin-top: -13px;
+    margin-bottom: 3px;
 }
