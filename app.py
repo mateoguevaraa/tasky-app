@@ -146,11 +146,16 @@ def register():
         verification_link = url_for('verify_email', token=verification_token, _external=True)
 
         msg = Message('Verify Your Email', recipients=[email])
-        msg.body = f'Click {verification_link} to verify your email.'
+        # msg.html = 
+        # msg.body = f'Click {verification_link} to verify your email.'
 
         return redirect("/login")
     else:    
         return render_template("register.html")
+    
+@app.route("/email")
+def email():
+    return render_template("email.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

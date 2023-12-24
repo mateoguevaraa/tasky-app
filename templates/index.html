@@ -34,9 +34,9 @@
     </style>
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
     <h1 class="home-h1 text-center my-3" style="padding-top: 2rem;">
-        Welcome to <span class="tasky" id="auto-input"></span>
+        Welcome to <span class="code" id="auto-input"></span>
     </h1>
-    <p class="text-center slogan">// The Developer's Task Manager</p>
+    <p class="text-center slogan code">// The Developer's Task Manager</p>
 
     <p class="text-center intro mb-5" id="about">
         Tasky is a powerful task manager <span class="tasky">designed specifically for developers</span>, 
@@ -44,7 +44,7 @@
         manage tasks, and streamline your workflow.
     </p>
     <div id="features">
-        <h3 class="text-left subtitle font-weight-bold">Features</h3>
+        <h3 class="text-left subtitle" style="font-weight: 500;">Features</h3>
         <br>
         <ul class="intro">
             <li>
@@ -63,7 +63,7 @@
     </div>
     <script>
         var typed = new Typed('#auto-input', {
-          strings: ['Tasky()'],
+          strings: ['Tasky<span style="color:#F68807">()<span>'],
           typeSpeed: 120,
           backSpeed: 150,
           loop: true,

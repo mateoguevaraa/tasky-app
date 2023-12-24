@@ -34,6 +34,18 @@ main {
     margin-bottom: 5rem; /* Adjust as needed */
 }
 
+h1, h2, h3 {
+    font-family: 'Montserrat', sans-serif;
+}
+
+p, body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+header, .code {
+    font-family: 'Fira Code', monospace;
+}
+
 .content {
     max-width: 960px;
     margin: auto;
@@ -45,9 +57,9 @@ main {
 }
 
 .home-h1 {
-    font-size: 4rem;
+    font-size: 4.2rem;
     margin-bottom: 10px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .slogan {
