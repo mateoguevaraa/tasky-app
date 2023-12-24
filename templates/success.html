@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Activate Your Account
+{% endblock %}
+
+{% block header %}
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Login</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block main %}
+    <div class="d-flex justify-content-center align-items-center">
+        <img src="/static/orange-tick.png" alt="Orange Tick Logo" style="width: 100px;">
+    </div>
+    {% with message = get_flashed_messages(category_filter=['success']) %}
+        {% if message %}
+            <h3 style="padding-top: 2rem; text-align: center;">{{ message[0] }}</h3>
+        {% endif %}
+    {% endwith %}
+{% endblock %}

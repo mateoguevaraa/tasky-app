@@ -1,3 +1,5 @@
+atpublic==4.0
+attrs==23.1.0
 Babel==2.8.0
 blinker==1.7.0
 cachelib==0.9.0
@@ -39,13 +41,16 @@ PyJWT==2.3.0
 pyOpenSSL==21.0.0
 pyparsing==2.4.7
 python-apt==2.4.0+ubuntu2
+python-http-client==3.3.7
 pytz==2022.7.1
 PyYAML==5.4.1
 requests==2.31.0
 SecretStorage==3.3.1
+sendgrid==6.11.0
 simplejson==3.17.6
 six==1.16.0
 SQLAlchemy==2.0.23
+starkbank-ecdsa==2.2.0
 systemd-python==234
 typing_extensions==4.9.0
 ubuntu-advantage-tools==8001
