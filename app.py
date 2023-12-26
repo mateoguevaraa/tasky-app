@@ -1,6 +1,6 @@
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
-from flask import Flask, session, redirect, render_template, request, flash, url_for
+from flask import Flask, session, redirect, render_template, request, flash, url_for, Markup
 from flask_mail import Mail, Message
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -19,7 +19,6 @@ app.secret_key = os.environ.get('Tasky_secret_key')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app_data.db' # Database for app data (default db)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -99,25 +98,53 @@ def send_email(recipient_email, username, verification_link, subject):
     except Exception as e:
         print(e.message)
 
-def is_user_logged_in():
-    # Example logic to check if the user is logged in
-    # Replace this with your actual user authentication logic
-    return True  # Replace with actual check
-
 
 # Functioning of the web app
 
 @app.route("/", methods=["GET"])
 def home():
     if 'username' in session:
-        return render_template("home.html")
+        return render_template("dashboard.html")
     else:
         session.clear()
         return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html")
+    if request.method == "POST":
+        username = request.form.get('username')
+        password = request.form.get('password')
+        log_me_out = request.form.get('log-out-button')  # Check if "Log out after" is selected
+
+        # Check if username and password are provided
+        if not username or not password:
+            flash('Please provide both username and password.', 'error')
+            return redirect(url_for('login'))
+        else:
+            # Query the user from the database
+            user = User.query.filter_by(username=username).first()
+
+            if user:
+                # Validate password
+                if check_password_hash(user.password, password):
+                    # Password is correct, set the user in the session
+                    session['username'] = user.username
+
+                    if log_me_out:
+                        session.permanent = False  # Log out after closing the browser
+                    else:
+                        session.permanent = True  # Stay logged in even after closing the browser
+
+                    flash('Login successful!', 'success')
+                    return redirect(url_for('home'))  # Redirect to the home page or dashboard
+                else:
+                    flash('Incorrect password. Please try again.', 'error')
+                    return redirect(url_for('login'))
+            else:
+                flash('User does not exist. Please <a href="/register" style="color:inherit;">register</a>.', 'error')
+                return redirect(url_for('login'))
+    else:
+        return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -132,31 +159,44 @@ def register():
 
         if not username:
             flash('Username cannot be empty.', 'username_error')
-            return render_template("register.html")
+            return redirect(url_for('register'))
         
         if len(username) <= 20 and len(username) >= 3:
             pass
         else:
             flash('Username must be between 3 and 20 characters', 'username_error')
-            return render_template("register.html")
+            return redirect(url_for('register'))
 
         if validate_user_input(username):
             pass
         else:
             flash('Username can only contain letters, numbers, ".", or "_".', 'username_error')
-            return render_template("register.html")
+            return redirect(url_for('register'))
 
         username_db = db.session.scalars(db.select(User).filter_by(username = username)).first()
         
         if username_db is not None:
             flash('Username Already Exists.', 'username_error')
-            return render_template("register.html")
+            return redirect(url_for('register'))
         
+        # Handling invalid Password input
+        
+        if not password or len(password) < 5 or len(password) > 20:
+            flash('Invalid Password.', 'password_error')
+            return redirect(url_for('register'))
+        
+        if password != password_confirm:
+            flash("Passwords do not match.", 'password_error')
+            return redirect(url_for('register'))
+        
+        password_hash = generate_password_hash(password)
+
 
         # Handling invalid email adress
+
         if not email:
             flash('Email cannot be empty.', 'email_error')
-            return render_template('register.html')
+            return redirect(url_for('register'))
 
         try:
             email_info = validate_email(email)
@@ -164,7 +204,7 @@ def register():
 
         except EmailNotValidError as e:
             flash('Invalid email: ' + str(e), 'email_error')
-            return render_template('register.html')
+            return redirect(url_for('register'))
         
         result = is_valid_email_domain(email)
 
@@ -172,26 +212,13 @@ def register():
             pass
         else:
             flash('Could not find the specified email adress.', 'email_error')
-            return render_template('register.html')
+            return redirect(url_for('register'))
         
         # Check if email already exists in pending_users table
         existing_email = PendingUser.query.filter_by(email=email).first()
         if existing_email:
             flash('Email already exists! Try another.', 'email_error')
-            return render_template("register.html")
-
-
-        # Handling invalid Password input
-        
-        if not password or len(password) < 5 or len(password) > 20:
-            flash('Invalid Password.', 'password_error')
-            return render_template("register.html")
-        
-        if password != password_confirm:
-            flash("Passwords do not match.", 'password_error')
-            return render_template("register.html")
-        
-        password_hash = generate_password_hash(password)
+            return redirect(url_for('register'))
     
         # Store the user in PendingUser temporarily until verification
     
@@ -209,17 +236,17 @@ def register():
 
             if send_email(email, username, verification_link, 'Activate Your Tasky Account'):
                 flash('Verification email sent! Please check your inbox.', 'success')
-                return render_template("success.html")
+                return redirect(url_for('register'))
             else:
                 db.session.rollback()
                 flash('An unexpected error occured during registration. Try again', 'register_error')
-                return render_template("register.html")
+                return redirect(url_for('register'))
         
         except IntegrityError as e:
             db.session.rollback()
 
             flash('An unexpected error occured during registration. Try again', 'register_error')
-            return render_template("register.html")
+            return redirect(url_for('register'))
     else:    
         return render_template("register.html")
     
@@ -239,9 +266,10 @@ def verify_email(token):
         flash('Invalid or expired verification token.', 'error')
         return redirect(url_for('register'))  # Redirect to the register page with an error flash message
     
-@app.route("/email")
-def email():
-    return render_template("email.html")
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 @app.route("/success")
 def success():

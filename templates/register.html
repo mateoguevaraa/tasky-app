@@ -17,73 +17,28 @@
 
 {% block main %}
     <h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">def </span><span style="color: rgba(255, 253, 159, 0.783)">Register</span><span style="color: rgb(241, 185, 0)">()</span></h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-dismissible alert-danger fade show">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     <div class="container-fluid">
         <div class="row align-items-center justify-content-center">
             <div class="col rounded p-4 shadow register-box pb-2">
-                <form class="register-form" action="/register" method="post">
+                <form class="register-form" action="{{ url_for('register') }}" method="post">
                     <div class="form-group mb-4">
-                        {% with message = get_flashed_messages(category_filter=['register_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[0] }}</small>
-                            {% endif %}
-                        {% endwith %}
                         <input type="text" class="form-control mt-3" id="username" name="username" placeholder="// Username">
-                        {% with message = get_flashed_messages(category_filter=['username_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[0] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['username_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[1] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['username_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[3] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['username_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[4] }}</small>
-                            {% endif %}
-                        {% endwith %}
                     </div>
                     <div class="form-group mb-4">
                         <input type="email" class="form-control mt-1" id="email" name="email" aria-describedby="emailHelp" placeholder="// Email">
-                        {% with message = get_flashed_messages(category_filter=['email_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[0] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['email_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[1] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['email_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[2] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['email_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[3] }}</small>
-                            {% endif %}
-                        {% endwith %}
                     </div>
                     <div class="form-group mb-4">
                         <input type="password" class="form-control mt-1" id="password" name="password" placeholder="// Password">
-                        {% with message = get_flashed_messages(category_filter=['password_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[0] }}</small>
-                            {% endif %}
-                        {% endwith %}
-                        {% with message = get_flashed_messages(category_filter=['password_error']) %}
-                            {% if message %}
-                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[1] }}</small>
-                            {% endif %}
-                        {% endwith %}
                     </div>
                     <div class="form-group mb-4">
                         <input type="password" class="form-control mt-1" id="password-confirm" name="password-confirm" placeholder="// Confirm_Password">

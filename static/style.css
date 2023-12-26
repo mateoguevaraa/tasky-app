@@ -104,3 +104,21 @@ main {
     margin-top: -13px;
     margin-bottom: 3px;
 }
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+    /*Without this, clicking will make it sticky*/
+    pointer-events: none;
+}
+
+.dropdown-menu {
+    background-color: #2a2a2a74;
+}
+
+.dropdown-menu a.dropdown-item:hover {
+    background-color: #f686079c !important; /* Change the background color on hover */
+    color: white !important; /* Change the text color on hover */
+}

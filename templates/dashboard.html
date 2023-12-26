@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block header %}
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Projects
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
+                <!-- List of projects -->
+                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Project 1</a>
+                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Project 2</a>
+                <!-- ... -->
+            </div>
+        </li>
+    </ul>
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pr-2">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                My Account
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
+                <!-- List of projects -->
+                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
+                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Log Out</a>
+                <!-- ... -->
+            </div>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block main %}
+
+{% endblock %}
