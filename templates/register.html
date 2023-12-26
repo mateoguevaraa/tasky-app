@@ -27,7 +27,7 @@
                             <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[0] }}</small>
                             {% endif %}
                         {% endwith %}
-                        <input type="text" class="form-control mt-1" id="username" name="username" placeholder="// Username">
+                        <input type="text" class="form-control mt-3" id="username" name="username" placeholder="// Username">
                         {% with message = get_flashed_messages(category_filter=['username_error']) %}
                             {% if message %}
                             <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[0] }}</small>
@@ -36,6 +36,16 @@
                         {% with message = get_flashed_messages(category_filter=['username_error']) %}
                             {% if message %}
                             <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[1] }}</small>
+                            {% endif %}
+                        {% endwith %}
+                        {% with message = get_flashed_messages(category_filter=['username_error']) %}
+                            {% if message %}
+                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[3] }}</small>
+                            {% endif %}
+                        {% endwith %}
+                        {% with message = get_flashed_messages(category_filter=['username_error']) %}
+                            {% if message %}
+                            <small id="forgot-pw" class="form-text" style="color: #F68807">{{ message[4] }}</small>
                             {% endif %}
                         {% endwith %}
                     </div>

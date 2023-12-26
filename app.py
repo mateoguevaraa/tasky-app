@@ -4,16 +4,16 @@ from flask import Flask, session, redirect, render_template, request, flash, url
 from flask_mail import Mail, Message
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
+from secrets import token_urlsafe
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 import dns.resolver
 import os
-import secrets
+import re
 
 app = Flask(__name__)
-app.config.from_object(Config)
 
 app.secret_key = os.environ.get('Tasky_secret_key')
 
@@ -65,7 +65,13 @@ class PendingUser(db.Model):
 # Functions
     
 def generate_verification_token():
-    return secrets.token_urlsafe(32)
+    return token_urlsafe(32)
+
+def validate_user_input(username):
+    # Define the regular expression pattern for username validation
+    pattern = r'^[a-zA-Z0-9_.]+$'  # Alphanumeric with '.', '_' allowed
+    
+    return bool(re.match(pattern, username))
 
 def is_valid_email_domain(email):
     try:
@@ -84,11 +90,14 @@ def send_email(recipient_email, username, verification_link, subject):
         html_content= render_template("email.html", username=username, verification_link=verification_link))
     
     try:
-        sg = SendGridAPIClient(os.environ.get('SendGrid_key'))
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
         response = sg.send(message)
-        return True
+        if response.status_code == 202:
+            return True  # Email sent successfully
+        else:
+            return False  # Email sending failed
     except Exception as e:
-        return False
+        print(e.message)
 
 def is_user_logged_in():
     # Example logic to check if the user is logged in
@@ -114,15 +123,27 @@ def login():
 def register():
     if request.method == "POST":
 
-        username = request.form.get("username")
+        username = request.form.get("username").lower()
         email = request.form.get("email")
         password = request.form.get("password")
         password_confirm = request.form.get("password-confirm")
 
         # Handling invalid Username input
 
-        if not username or len(username) < 3:
-            flash('Invalid Username.', 'username_error')
+        if not username:
+            flash('Username cannot be empty.', 'username_error')
+            return render_template("register.html")
+        
+        if len(username) <= 20 and len(username) >= 3:
+            pass
+        else:
+            flash('Username must be between 3 and 20 characters', 'username_error')
+            return render_template("register.html")
+
+        if validate_user_input(username):
+            pass
+        else:
+            flash('Username can only contain letters, numbers, ".", or "_".', 'username_error')
             return render_template("register.html")
 
         username_db = db.session.scalars(db.select(User).filter_by(username = username)).first()
@@ -173,9 +194,9 @@ def register():
         password_hash = generate_password_hash(password)
     
         # Store the user in PendingUser temporarily until verification
-
+    
         verification_token = generate_verification_token()
-
+    
         pending_user = PendingUser(username=username, password=password_hash, email=email, verification_token=verification_token)
 
         db.session.add(pending_user)
@@ -187,20 +208,18 @@ def register():
             verification_link = url_for('verify_email', token=verification_token, _external=True)
 
             if send_email(email, username, verification_link, 'Activate Your Tasky Account'):
-                pass
+                flash('Verification email sent! Please check your inbox.', 'success')
+                return render_template("success.html")
             else:
-                flash('An unexpected error occured during registration. Try again', 'register error')
+                db.session.rollback()
+                flash('An unexpected error occured during registration. Try again', 'register_error')
                 return render_template("register.html")
-
-            flash('Verification email sent! Please check your inbox.', 'success')
-            return render_template("success.html")
         
         except IntegrityError as e:
             db.session.rollback()
 
-            flash('An unexpected error occured during registration. Try again', 'register error')
+            flash('An unexpected error occured during registration. Try again', 'register_error')
             return render_template("register.html")
-
     else:    
         return render_template("register.html")
     
