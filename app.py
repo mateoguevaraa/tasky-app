@@ -1,27 +1,32 @@
+# pylint: disable=E1101
+
+from config import GOOGLE_RECAPTCHA_API_KEY, GOOGLE_RECAPTCHA_SITE_KEY, Tasky_secret_key
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
-from flask import Flask, session, redirect, render_template, request, flash, url_for, Markup
-from flask_mail import Mail, Message
+from flask import Flask, session, redirect, render_template, request, flash, url_for, Markup, abort
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-from secrets import token_urlsafe
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 import dns.resolver
 import os
 import re
+import requests
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get('Tasky_secret_key')
+app.secret_key = Tasky_secret_key
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app_data.db' # Database for app data (default db)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
 
 db = SQLAlchemy(app)
-mail = Mail(app)
+
+# Configure Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # Configure Flask-Session to use SQLAlchemy for session storage
 app.config['SESSION_TYPE'] = 'sqlalchemy'
@@ -32,7 +37,7 @@ app.config['SESSION_SQLALCHEMY_TABLE'] = 'sessions'
 Session(app)
 
 # Tables
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -40,31 +45,49 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(30), unique=True, nullable=False)
     verified = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    projects = db.relationship('Project', backref='users', lazy=True)
 
-class Task(db.Model):
-    __tablename__ = 'tasks'
+class Project(db.Model):
+
+    __tablename__ = 'projects'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    task_name = db.Column(db.String(100), nullable=False)
-    user = db.relationship('User', backref='tasks')  # Establish a relationship with the User table
+    name = db.Column(db.String(100), nullable=False)
+    tasks = db.relationship('Task', backref='projects', lazy=True)
 
-class PendingUser(db.Model):
-    __tablename__ = 'pending_users'
+class Task(db.Model):
+
+    __tablename__ = 'tasks'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(30), unique=True, nullable=False)
-    verification_token = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    description = db.Column(db.String(200), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
 
+GOOGLE_VERIFY_URL = 'https://www.google.com/recaptcha/api/siteverify'
 
 # Functions
     
-def generate_verification_token():
-    return token_urlsafe(32)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+def validate_recaptcha(recaptcha_response):
+
+    secret_key = GOOGLE_RECAPTCHA_SITE_KEY
+
+    # Validate the reCAPTCHA response using Google API
+    import requests
+    payload = {
+        'response': recaptcha_response,
+        'secret': secret_key
+    }
+    response = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+    result = response.json()
+
+    return result['success']
 
 def validate_user_input(username):
     # Define the regular expression pattern for username validation
@@ -81,30 +104,23 @@ def is_valid_email_domain(email):
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         return False
 
-def send_email(recipient_email, username, verification_link, subject):
-    message = Mail(
-        from_email='taskyapp@homemail.com',
-        to_emails=recipient_email,
-        subject=subject,
-        html_content= render_template("email.html", username=username, verification_link=verification_link))
-    
-    try:
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        if response.status_code == 202:
-            return True  # Email sent successfully
-        else:
-            return False  # Email sending failed
-    except Exception as e:
-        print(e.message)
-
 
 # Functioning of the web app
 
-@app.route("/", methods=["GET"])
+@app.route("/home", methods=["GET", "POST", "DELETE"])
+@login_required
 def home():
-    if 'username' in session:
-        return render_template("dashboard.html")
+    if request.method == "POST":
+        pass
+    else:
+        projects=current_user.projects
+        username=current_user.username
+        return render_template("dashboard.html", projects=projects, username=username)
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if "username" in session:
+        return redirect(url_for('home'))
     else:
         session.clear()
         return render_template("index.html")
@@ -112,7 +128,7 @@ def home():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form.get('username')
+        username = request.form.get('username').lower()
         password = request.form.get('password')
         log_me_out = request.form.get('log-out-button')  # Check if "Log out after" is selected
 
@@ -134,8 +150,9 @@ def login():
                         session.permanent = False  # Log out after closing the browser
                     else:
                         session.permanent = True  # Stay logged in even after closing the browser
+                    
+                    login_user(user)
 
-                    flash('Login successful!', 'success')
                     return redirect(url_for('home'))  # Redirect to the home page or dashboard
                 else:
                     flash('Incorrect password. Please try again.', 'error')
@@ -215,65 +232,42 @@ def register():
             return redirect(url_for('register'))
         
         # Check if email already exists in pending_users table
-        existing_email = PendingUser.query.filter_by(email=email).first()
+        existing_email = User.query.filter_by(email=email).first()
         if existing_email:
             flash('Email already exists! Try another.', 'email_error')
             return redirect(url_for('register'))
     
-        # Store the user in PendingUser temporarily until verification
+        # Store the user in user table
     
-        verification_token = generate_verification_token()
-    
-        pending_user = PendingUser(username=username, password=password_hash, email=email, verification_token=verification_token)
+        user = User(username=username, password=password_hash, email=email)
 
-        db.session.add(pending_user)
+        db.session.add(user)
     
         try:
             db.session.commit()
-
-            # Generate an absolute URL
-            verification_link = url_for('verify_email', token=verification_token, _external=True)
-
-            if send_email(email, username, verification_link, 'Activate Your Tasky Account'):
-                flash('Verification email sent! Please check your inbox.', 'success')
-                return redirect(url_for('register'))
-            else:
-                db.session.rollback()
+            secret_response = request.form['g-recaptcha-response']
+            verify_response = requests.post(
+                url=f'{GOOGLE_VERIFY_URL}?secret={GOOGLE_RECAPTCHA_API_KEY}&response={secret_response}').json()
+            print(verify_response)
+            # Check Google response. If success == False or score < 0.5, most likely a robot -> abort
+            if not verify_response['success'] or verify_response['score'] < 0.5:
                 flash('An unexpected error occured during registration. Try again', 'register_error')
                 return redirect(url_for('register'))
-        
+
+            return redirect(url_for('login'))
         except IntegrityError as e:
             db.session.rollback()
 
             flash('An unexpected error occured during registration. Try again', 'register_error')
             return redirect(url_for('register'))
     else:    
-        return render_template("register.html")
-    
-@app.route('/verify/<token>')
-def verify_email(token):
-    pending_user = PendingUser.query.filter_by(verification_token=token).first()
-    if pending_user:
-        # Move the pending user to the User table after verification
-        new_user = User(username=pending_user.username, password=pending_user.password, email=pending_user.email, created_at=pending_user.created_at)
-        db.session.add(new_user)
-        db.session.delete(pending_user)
-        db.session.commit()
-
-        flash('Your email has been verified. You can now log in.', 'success')
-        return redirect(url_for('login'))
-    else:
-        flash('Invalid or expired verification token.', 'error')
-        return redirect(url_for('register'))  # Redirect to the register page with an error flash message
+        return render_template("register.html", GOOGLE_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY)
     
 @app.route('/logout')
 def logout():
     session.clear()
+    logout_user()
     return redirect(url_for('login'))
-
-@app.route("/success")
-def success():
-    return render_template("success.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

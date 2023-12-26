@@ -3,3 +3,4 @@ users.db
 __pycache__
 instance/
 sendgrid.env
+config.py

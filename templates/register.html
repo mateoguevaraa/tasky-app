@@ -30,7 +30,7 @@
     <div class="container-fluid">
         <div class="row align-items-center justify-content-center">
             <div class="col rounded p-4 shadow register-box pb-2">
-                <form class="register-form" action="{{ url_for('register') }}" method="post">
+                <form class="register-form" action="{{ url_for('register') }}" method="post" id="register-form">
                     <div class="form-group mb-4">
                         <input type="text" class="form-control mt-3" id="username" name="username" placeholder="// Username">
                     </div>
@@ -44,11 +44,18 @@
                         <input type="password" class="form-control mt-1" id="password-confirm" name="password-confirm" placeholder="// Confirm_Password">
                     </div>
                     <div class="register-button mb-4 d-grid gap-4">
-                        <button type="submit" class="btn" style="background-color:#F68807; color: #1e1e1e;">Register</button>
+                        <button type="submit" class="btn g-recaptcha" data-callback='onSubmit' 
+                        data-action='submit'data-sitekey="{{GOOGLE_RECAPTCHA_SITE_KEY}}" 
+                        style="background-color:#F68807; color: #1e1e1e;">Register</button>
                     </div>
                     <small id="forgot-pw" class="form-text" style="color: #F68807">* Password length must be between 5 and 20 characters</small>
                 </form>
             </div>
         </div>
     </div>
+    <script>
+        function onSubmit(token) {
+          document.getElementById("register-form").submit();
+        }
+    </script>
 {% endblock %}

@@ -28,7 +28,7 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
                 <!-- List of projects -->
                 <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
-                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Log Out</a>
+                <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Log Out</a>
                 <!-- ... -->
             </div>
         </li>
@@ -36,5 +36,20 @@
 {% endblock %}
 
 {% block main %}
+    <!-- <h1 class="code">def Projects({{username}})</h1> -->
+    <div class="center-content">
+        <div class="tasks-manager-box">
 
+            <div class="projects-sidebar">
+                <h1 class="code">Projects</h1>
+            </div>
+
+            <div class="tasks">
+                <h1 class="code">Projects</h1>
+            </div>
+
+        </div>
+        <!-- {% for project in projects %}
+                    <p>{{project.name}}</p>
+                {% endfor %} -->
 {% endblock %}
