@@ -37,7 +37,7 @@
 {% endblock %}
 {% block main %}
 <style>
-    @media screen and (max-width: 575px) {
+    @media screen and (max-width: 675px) {
         .break {
             display: block !important;
             width: 100%;
@@ -57,6 +57,24 @@
             padding-bottom: 8px;
         }
     }
+    @media screen and (max-width: 376px) {
+        .task-container {
+            display: block;
+        }
+
+        .task {
+            width: 100%;
+        }
+
+        .register-box {
+            padding: 1rem !important;
+        }
+    }
+
+    .edit_hover_class {
+            max-width: 90%;
+    }
+
     @media screen and (min-width: 576px)
     {
         main {
@@ -95,7 +113,7 @@
             </div>
 
             <div class="col-12">
-                <div class="container rounded p-4 shadow login-box pb-4">
+                <div class="container rounded p-4 shadow register-box pb-4">
                     {% for project in projects %}
                     <div class="row justify-content-between h-100 task-container" style="align-items: center; margin-bottom: 10px;">
                         <div class="col-1">
@@ -105,7 +123,7 @@
                             <ul class="list-group">
                                 <li class="code list-group-item d-flex align-items-center task" style="background-color: transparent !important; border: none; color:#dddddd">
                                     <label class="ml-2" id="task_{{project.id}}">{{project.name}}</label>
-                                    <span class="badge badge-primary badge-pill ml-auto" style="background-color: transparent; user-select:none">
+                                    <span class="badge badge-primary badge-pill ml-2 ms-auto" style="background-color: transparent; user-select:none">
                                         <a class="icon-link" href=""><i class="fa-regular fa-pen-to-square" style="color: #F68807;"></i></a>
                                         <span class="pr-3" style="background-color: transparent;"></span>
                                         <a href="" class="icon-link"><i class="fa-solid fa-trash" style="color: #F68807;"></i></a>
