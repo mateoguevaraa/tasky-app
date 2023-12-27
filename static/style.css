@@ -52,8 +52,8 @@ header, .code {
 }
 
 main {
-    margin-left: 3.3rem;
-    margin-right: 3.3rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
 }
 
 .home-h1 {
@@ -121,4 +121,40 @@ main {
 .dropdown-menu a.dropdown-item:hover {
     background-color: #f686079c !important; /* Change the background color on hover */
     color: white !important; /* Change the text color on hover */
+}
+
+.checked  {
+    text-decoration: line-through;
+    opacity: .5;
+}
+
+/* This is for the button */
+.task button {
+    width: 2em;
+    height: 2em;
+    display: block;
+    background: transparent;
+    outline: none;
+    border: none;
+    border-radius: 50%;
+    color: red;
+}
+
+.btnDone {
+background: rgba(0, 255, 0, 0.47);
+color: #fff;
+}
+
+.edit_hover_class a{
+    visibility:hidden;
+  }
+.edit_hover_class:hover a {
+visibility:visible;
+}
+
+.task-box {
+    background-color: #2A2A2A;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }

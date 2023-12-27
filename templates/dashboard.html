@@ -13,8 +13,9 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
                 <!-- List of projects -->
-                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Project 1</a>
-                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Project 2</a>
+                {% for project in projects %}
+                    <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">{{project.name}}</a>
+                {% endfor %}
                 <!-- ... -->
             </div>
         </li>
@@ -25,7 +26,7 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 My Account
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
+            <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
                 <!-- List of projects -->
                 <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
                 <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Log Out</a>
@@ -34,22 +35,108 @@
         </li>
     </ul>
 {% endblock %}
-
 {% block main %}
-    <!-- <h1 class="code">def Projects({{username}})</h1> -->
-    <div class="center-content">
-        <div class="tasks-manager-box">
+<style>
+    @media screen and (max-width: 575px) {
+        .break {
+            display: block !important;
+            width: 100%;
+        }
 
-            <div class="projects-sidebar">
-                <h1 class="code">Projects</h1>
+        .add {
+            margin-left: 0 !important; 
+        }
+
+        .check {
+            vertical-align: top;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        i {
+            padding-bottom: 8px;
+        }
+    }
+    @media screen and (min-width: 576px)
+    {
+        main {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+    }
+
+    .task-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+    .task {
+        flex: 1 1 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+    }
+</style>
+
+<div class="dashboard">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-6" style="padding-bottom: 4rem;">
+                <h3 class="code me-auto">
+                    <span class="tasky">project(</span>{{username}}<span class="tasky">)</span>
+                </h3>
             </div>
 
-            <div class="tasks">
-                <h1 class="code">Projects</h1>
+            <div class="col-6 col-sm-6 d-flex align-items-center add" style="padding-bottom: 4rem;">
+                <h3 class="code ms-auto add" style="color: rgba(255, 253, 159, 0.783)">add_task</h3>
+                <a class="icon-link-hover pl-2 pb-2" href=""><i class="fa-solid fa-plus fa-lg pl-3 pb-2" style="color: rgba(231, 144, 255, 0.774);"></i></a>
             </div>
 
+            <div class="col-12">
+                <div class="container rounded p-4 shadow login-box pb-4">
+                    {% for project in projects %}
+                    <div class="row justify-content-between h-100 task-container" style="align-items: center; margin-bottom: 10px;">
+                        <div class="col-1">
+                            <i class="fa-regular fa-circle" id="icon-check-{{project.id}}" style="color: red;" onclick="toggleTaskCompletion('{{project.id}}')"></i>
+                        </div>
+                        <div class="col-11 edit_hover_class">
+                            <ul class="list-group">
+                                <li class="code list-group-item d-flex align-items-center task" style="background-color: transparent !important; border: none; color:#dddddd">
+                                    <label class="ml-2" id="task_{{project.id}}">{{project.name}}</label>
+                                    <span class="badge badge-primary badge-pill ml-auto" style="background-color: transparent; user-select:none">
+                                        <a class="icon-link" href=""><i class="fa-regular fa-pen-to-square" style="color: #F68807;"></i></a>
+                                        <span class="pr-3" style="background-color: transparent;"></span>
+                                        <a href="" class="icon-link"><i class="fa-solid fa-trash" style="color: #F68807;"></i></a>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
-        <!-- {% for project in projects %}
-                    <p>{{project.name}}</p>
-                {% endfor %} -->
+    </div>
+</div>
+
+    <script>
+        // Function to toggle icons and line-through style for tasks
+        function toggleTaskCompletion(taskId) {
+            const iconElement = document.getElementById(`icon-check-${taskId}`);
+            const taskElement = document.getElementById(`task_${taskId}`);
+    
+            if (iconElement.classList.contains('fa-solid')) {
+                iconElement.classList.remove('fa-solid');
+                iconElement.style.color = 'red';
+                taskElement.style.textDecoration = 'none';
+            } else {
+                iconElement.classList.add('fa-solid');
+                iconElement.style.color = 'green';
+                taskElement.style.textDecoration = 'line-through';
+            }
+        }
+    </script>
+</div>
 {% endblock %}
