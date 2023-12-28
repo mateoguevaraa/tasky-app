@@ -1,5 +1,3 @@
-# pylint: disable=E1101
-
 from config import GOOGLE_RECAPTCHA_API_KEY, GOOGLE_RECAPTCHA_SITE_KEY, Tasky_secret_key
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
@@ -54,7 +52,7 @@ class Project(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(25), nullable=False)
     tasks = db.relationship('Task', backref='projects', lazy=True)
 
 class Task(db.Model):
@@ -117,6 +115,64 @@ def home():
         username=current_user.username
         return render_template("dashboard.html", projects=projects, username=username)
 
+
+@app.route("/edit-task", methods=["GET", "POST", "DELETE"])
+@login_required
+def edit():
+    if request.method == "POST":
+        pass
+    else:
+        return render_template("dashboard2.html", projects=projects, username=username)
+
+@app.route("/add-proyect", methods=["GET", "POST"])
+@login_required
+def add_project():
+    if request.method == "POST":
+        project_name = request.form.get('project')
+
+        if not project_name:
+            flash('Project cannot be empty.', 'input_error')
+            return redirect(url_for('register'))
+        
+        if len(project_name) > 25:
+            flash('Project name must be less than 25 characters.', 'input_error')
+            return redirect(url_for('register'))
+        
+        # Trim leading and trailing spaces
+        trimmed_name = project_name.strip()
+        
+        # Check if the name is empty or contains more than one space between words
+        words = trimmed_name.split()
+
+        if len(words) > 1 and any(len(word) == 0 for word in words[1:]):
+            flash('Invalid project name.', 'input_error')
+            return redirect(url_for('add_project'))
+        
+        project_name = trimmed_name
+        print(project_name)
+
+        username = session["username"]
+        user_id=User.query.filter_by(username=username).first().id
+        project = Project(user_id=user_id, name=project_name)
+
+        db.session.add(project)
+
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            flash('An error has occured adding the project. Try Again.', 'input_error')
+            return redirect(url_for('add_project'))
+
+        return redirect(url_for('home'))
+
+    else:
+        return render_template("add-project.html")
+
+
+
+
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     if "username" in session:
@@ -161,7 +217,10 @@ def login():
                 flash('User does not exist. Please <a href="/register" style="color:inherit;">register</a>.', 'error')
                 return redirect(url_for('login'))
     else:
-        return render_template("login.html")
+        if "username" in session:
+            return redirect(url_for('home'))
+        else:
+            return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -197,6 +256,10 @@ def register():
             return redirect(url_for('register'))
         
         # Handling invalid Password input
+        
+        if ' ' in password:
+            flash('Invalid Password.', 'password_error')
+            return redirect(url_for('register'))
         
         if not password or len(password) < 5 or len(password) > 20:
             flash('Invalid Password.', 'password_error')
@@ -260,8 +323,11 @@ def register():
 
             flash('An unexpected error occured during registration. Try again', 'register_error')
             return redirect(url_for('register'))
-    else:    
-        return render_template("register.html", GOOGLE_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY)
+    else:
+        if "username" in session:
+            return redirect(url_for('home'))
+        else:
+            return render_template("register.html", GOOGLE_RECAPTCHA_SITE_KEY=GOOGLE_RECAPTCHA_SITE_KEY)
     
 @app.route('/logout')
 def logout():

@@ -17,6 +17,8 @@
                     <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">{{project.name}}</a>
                 {% endfor %}
                 <!-- ... -->
+                <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
+                <a class="dropdown-item code" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Add Project</a>
             </div>
         </li>
     </ul>
@@ -84,10 +86,12 @@
     }
 
     .task-container {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        padding: 10px; /* Padding for each task item */
+        border-bottom: 1px solid #f686077a; /* Add a border between task items */
+    }
 
     .task {
         flex: 1 1 100%;
@@ -95,29 +99,61 @@
         word-wrap: break-word;
         word-break: break-word;
         hyphens: auto;
+        margin: 0; /* Reset margin to avoid extra space */
+    }
+
+    .ide {
+        padding: 10px; /* Add padding to the ide box */
+    }
+
+    .language {
+    color: white;
+    background-color: #131313;
+    padding: 12px 16px;
+    border-radius: 5px 5px 0 0;
+    text-align: left;
+  }
+
+    /* Remove border-bottom for the last task item */
+    .task-container:last-child {
+        border-bottom: none;
+        margin-bottom: 0 !important;
+    }
+
+    .here{
+        color:#F68807;
+    }
+    
+    .here:hover {
+        color:#ff7220;
     }
 </style>
+{% if not projects %}
 
+<h1 class="text-center">No projects found.</h1>
+<h3 class="text-center" style="color: #ddddddc5;">Start by creating a new project <a href="{{url_for('add_project')}}" class="here">here.</a></h3>
+
+{% else %}
 <div class="dashboard">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6 col-sm-6" style="padding-bottom: 4rem;">
-                <h3 class="code me-auto">
-                    <span class="tasky">project(</span>{{username}}<span class="tasky">)</span>
-                </h3>
-            </div>
+            <p class="language code" id="language-copy"><span style="color: #f27cffd3">def </span>
+                <span style="color: rgb(93, 215, 255);">Project(</span><span>Tasky_app</span><span style="color: rgb(93, 215, 255);">)</span>
+            </p>
 
-            <div class="col-6 col-sm-6 d-flex align-items-center add" style="padding-bottom: 4rem;">
+            <!-- <div class="col-6 col-sm-6 d-flex align-items-center add" style="padding-bottom: 4rem;">
                 <h3 class="code ms-auto add" style="color: rgba(255, 253, 159, 0.783)">add_task</h3>
                 <a class="icon-link-hover pl-2 pb-2" href=""><i class="fa-solid fa-plus fa-lg pl-3 pb-2" style="color: rgba(231, 144, 255, 0.774);"></i></a>
-            </div>
+            </div> -->
 
             <div class="col-12">
-                <div class="container rounded p-4 shadow register-box pb-4">
+                <div class="container rounded p-4 shadow task-box pb-4 ide">
                     {% for project in projects %}
                     <div class="row justify-content-between h-100 task-container" style="align-items: center; margin-bottom: 10px;">
                         <div class="col-1">
-                            <i class="fa-regular fa-circle" id="icon-check-{{project.id}}" style="color: red;" onclick="toggleTaskCompletion('{{project.id}}')"></i>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" style="cursor: pointer; border: 1.8px solid #f68607bc; background-color: transparent; box-shadow: none !important;">
+                        </div>
                         </div>
                         <div class="col-11 edit_hover_class">
                             <ul class="list-group">
@@ -138,23 +174,6 @@
         </div>
     </div>
 </div>
-
-    <script>
-        // Function to toggle icons and line-through style for tasks
-        function toggleTaskCompletion(taskId) {
-            const iconElement = document.getElementById(`icon-check-${taskId}`);
-            const taskElement = document.getElementById(`task_${taskId}`);
-    
-            if (iconElement.classList.contains('fa-solid')) {
-                iconElement.classList.remove('fa-solid');
-                iconElement.style.color = 'red';
-                taskElement.style.textDecoration = 'none';
-            } else {
-                iconElement.classList.add('fa-solid');
-                iconElement.style.color = 'green';
-                taskElement.style.textDecoration = 'line-through';
-            }
-        }
-    </script>
 </div>
+{% endif %}
 {% endblock %}
