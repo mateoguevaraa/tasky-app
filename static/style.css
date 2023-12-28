@@ -1,3 +1,47 @@
+/* Responsive design */
+
+/* For mobile devices */
+@media screen and (max-width: 767px) {
+
+    .container {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    /* Additional styles for smaller devices */
+}
+
+/* For tablets */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+
+    main {
+        width: 90%;
+        padding: 0 15px;
+    }
+    
+    .login-box, .register-box, .alert-pop {
+        max-width: 50% !important;
+        justify-content: center !important;
+        align-items: center !important;
+        vertical-align: middle !important;
+    }
+
+    /* Additional styles for tablets */
+}
+
+/* For laptops/desktops */
+@media screen and (min-width: 1025px) {
+
+    .login-box, .register-box, .alert-pop {
+        max-width: 30% !important;
+    }
+
+    /* Additional styles for larger screens */
+
+}
+
+
+
 
 @media screen and (max-width: 322px) {
     header {
@@ -35,7 +79,7 @@ main {
     margin-bottom: 5rem; /* Adjust as needed */
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -45,11 +89,6 @@ p, body {
 
 header, .code {
     font-family: 'Fira Code', monospace;
-}
-
-.content {
-    max-width: 960px;
-    margin: auto;
 }
 
 main {
@@ -140,7 +179,9 @@ visibility:visible;
     padding: 0;
 }
 
-
+.dropdown-menu {
+    min-width: 3rem !important;
+}
 
 
 

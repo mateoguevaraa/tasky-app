@@ -52,15 +52,17 @@ class Project(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    name = db.Column(db.String(25), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(200))
     tasks = db.relationship('Task', backref='projects', lazy=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Task(db.Model):
 
     __tablename__ = 'tasks'
 
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.String(150), nullable=False)
     completed = db.Column(db.Boolean, default=False)
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
 
@@ -101,19 +103,40 @@ def is_valid_email_domain(email):
         return True if mx_records else False
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN):
         return False
+    
+# Custom function to add 'now' to Jinja2 context
+@app.context_processor
+def inject_now():
+    return {'now': datetime.utcnow}
 
 
 # Functioning of the web app
 
-@app.route("/home", methods=["GET", "POST", "DELETE"])
+@app.route("/home", methods=["GET", "POST"])
 @login_required
 def home():
     if request.method == "POST":
         pass
+
     else:
-        projects=current_user.projects
-        username=current_user.username
-        return render_template("dashboard.html", projects=projects, username=username)
+
+        projects = current_user.projects
+        username = current_user.username
+        user_id = User.query.filter_by(username=username).first().id
+
+        return render_template("home.html", projects=projects, username=username)
+
+@app.route("/<project>", methods=["GET", "POST"])
+@login_required
+def project_dashboard():
+    if request.method == "POST":
+        pass
+    else:
+        projects = current_user.projects
+        username = current_user.username
+
+        return render_template("dashboard.html", projects=projects, username=username, tasks=tasks)
+
 
 
 @app.route("/edit-task", methods=["GET", "POST", "DELETE"])
@@ -122,21 +145,22 @@ def edit():
     if request.method == "POST":
         pass
     else:
-        return render_template("dashboard2.html", projects=projects, username=username)
+        return render_template("dashboard.html", projects=projects, username=username)
 
 @app.route("/add-proyect", methods=["GET", "POST"])
 @login_required
 def add_project():
     if request.method == "POST":
         project_name = request.form.get('project')
+        description = request.form.get('description')
 
         if not project_name:
             flash('Project cannot be empty.', 'input_error')
-            return redirect(url_for('register'))
+            return redirect(url_for('add_project'))
         
-        if len(project_name) > 25:
-            flash('Project name must be less than 25 characters.', 'input_error')
-            return redirect(url_for('register'))
+        if len(project_name) > 100:
+            flash('Project name must be less than 100 characters.', 'input_error')
+            return redirect(url_for('add_project'))
         
         # Trim leading and trailing spaces
         trimmed_name = project_name.strip()
@@ -149,11 +173,28 @@ def add_project():
             return redirect(url_for('add_project'))
         
         project_name = trimmed_name
-        print(project_name)
+
+        if len(description) > 200:
+            flash('The project description must be less than 200 characters.', 'input_error')
+            return redirect(url_for('add_project'))
+        
+        if description.isspace():
+            description = None
+
+        try:
+            project_name = project_name.capitalize()
+        except:
+            pass
+
+        try:
+            description = description.capitalize()
+        except:
+            pass
+
 
         username = session["username"]
         user_id=User.query.filter_by(username=username).first().id
-        project = Project(user_id=user_id, name=project_name)
+        project = Project(user_id=user_id, name=project_name, description=description)
 
         db.session.add(project)
 
@@ -167,7 +208,8 @@ def add_project():
         return redirect(url_for('home'))
 
     else:
-        return render_template("add-project.html")
+        username = current_user.username
+        return render_template("add-project.html", username=username)
 
 
 
@@ -291,7 +333,7 @@ def register():
         if result:
             pass
         else:
-            flash('Could not find the specified email adress.', 'email_error')
+            flash('Enter a valid email.', 'email_error')
             return redirect(url_for('register'))
         
         # Check if email already exists in pending_users table

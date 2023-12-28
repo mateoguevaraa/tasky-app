@@ -1,37 +1,26 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Dashboard
+    Add Project
 {% endblock %}
 
 {% block header %}
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Projects
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
-                <!-- List of projects -->
-                {% for project in projects %}
-                    <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">{{project.name}}</a>
-                {% endfor %}
-                <!-- ... -->
-                <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
-                <a class="dropdown-item code" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Add Project</a>
-            </div>
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('home')}}">Projects</a>
         </li>
     </ul>
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pr-2">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 user-nav">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                My Account
+                <i class="fa-regular fa-user"></i> {{username}}
             </a>
-            <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
+            <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
                 <!-- List of projects -->
                 <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
-                <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Log Out</a>
+                <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
+                <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #F68807; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; font-weight: bold;">Log Out</a>
                 <!-- ... -->
             </div>
         </li>
@@ -40,15 +29,21 @@
 
 
 {% block main %}
+
 <h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">def </span><span style="color: rgba(255, 253, 159, 0.783)">Add_Project</span><span style="color: rgb(241, 185, 0)">()</span></h1>
+
 {% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
-    {% for category, message in messages %}
-        <div class="alert alert-dismissible alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message | safe }} <!-- Apply the 'safe' filter to render HTML -->
-        </div>
-    {% endfor %}
+{% for category, message in messages %}
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center">
+    <div class="alert alert-dismissible alert-danger text-center alert-pop">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message | safe }} <!-- Apply the 'safe' filter to render HTML -->
+    </div>
+    </div>
+</div>
+{% endfor %}
 {% endif %}
 {% endwith %}
 
@@ -59,6 +54,9 @@
                 <div class="form-group mb-4">
                 <input type="username" class="form-control mt-1" id="project" name="project" aria-describedby="project" placeholder="// Project Name">
                 </div>
+                <div class="form-group mb-4">
+                    <input type="description" class="form-control mt-1" id="description" name="description" aria-describedby="description" placeholder="// Description (Optional)">
+                    </div>
                 <div class="login-button mb-4 d-grid gap-4">
                     <button type="submit" class="btn" name="add-project-button" style="background-color:#F68807; color: #1e1e1e; font-weight: 700;">Add Project</button>
                 </div>
@@ -66,4 +64,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

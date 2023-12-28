@@ -11,27 +11,28 @@
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Projects
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
                 <!-- List of projects -->
                 {% for project in projects %}
                     <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">{{project.name}}</a>
                 {% endfor %}
                 <!-- ... -->
                 <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
-                <a class="dropdown-item code" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Add Project</a>
+                <a class="dropdown-item code" href="{{url_for('add_project')}}" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Add Project</a>
             </div>
         </li>
     </ul>
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pr-2">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 user-nav">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                My Account
+                <i class="fa-regular fa-user"></i> {{username}}
             </a>
-            <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #2a2a2a74;">
+            <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
                 <!-- List of projects -->
                 <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
-                <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Log Out</a>
+                <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
+                <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #F68807; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; font-weight: bold;">Log Out</a>
                 <!-- ... -->
             </div>
         </li>
@@ -120,22 +121,10 @@
         margin-bottom: 0 !important;
     }
 
-    .here{
-        color:#F68807;
-    }
-    
-    .here:hover {
-        color:#ff7220;
-    }
 </style>
-{% if not projects %}
 
-<h1 class="text-center">No projects found.</h1>
-<h3 class="text-center" style="color: #ddddddc5;">Start by creating a new project <a href="{{url_for('add_project')}}" class="here">here.</a></h3>
-
-{% else %}
 <div class="dashboard">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <p class="language code" id="language-copy"><span style="color: #f27cffd3">def </span>
                 <span style="color: rgb(93, 215, 255);">Project(</span><span>Tasky_app</span><span style="color: rgb(93, 215, 255);">)</span>
@@ -148,7 +137,11 @@
 
             <div class="col-12">
                 <div class="container rounded p-4 shadow task-box pb-4 ide">
-                    {% for project in projects %}
+                    {% if not tasks %}
+                        Add tasks
+                    {% else %}
+
+                    {% for task in tasks %}
                     <div class="row justify-content-between h-100 task-container" style="align-items: center; margin-bottom: 10px;">
                         <div class="col-1">
                             <div class="form-check">
@@ -158,7 +151,7 @@
                         <div class="col-11 edit_hover_class">
                             <ul class="list-group">
                                 <li class="code list-group-item d-flex align-items-center task" style="background-color: transparent !important; border: none; color:#dddddd">
-                                    <label class="ml-2" id="task_{{project.id}}">{{project.name}}</label>
+                                    <label class="ml-2" id="task">{{task.name}}</label>
                                     <span class="badge badge-primary badge-pill ml-2 ms-auto" style="background-color: transparent; user-select:none">
                                         <a class="icon-link" href=""><i class="fa-regular fa-pen-to-square" style="color: #F68807;"></i></a>
                                         <span class="pr-3" style="background-color: transparent;"></span>
@@ -169,11 +162,14 @@
                         </div>
                     </div>
                     {% endfor %}
+
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
 </div>
+
 {% endif %}
 {% endblock %}
