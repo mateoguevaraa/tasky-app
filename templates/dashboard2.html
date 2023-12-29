@@ -1,37 +1,33 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Projects
+    {{project.name}}
 {% endblock %}
 
 {% block header %}
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link" href="{{url_for('home')}}">Projects Menu</a>
+    </li>
+</ul>
 
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-            <a class="nav-link" href="{{url_for('add_project')}}">Add Project</a>
-        </li>
-    </ul>
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 user-nav">
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown account">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa-regular fa-user"></i> {{username}}
             </a>
             <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
-                <!-- List of projects -->
+
                 <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
                 <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
                 <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #F68807; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; font-weight: bold;">Log Out</a>
-                <!-- ... -->
+
             </div>
         </li>
     </ul>
-
 {% endblock %}
-
-
 {% block main %}
-
 
 <style>
     
@@ -87,6 +83,14 @@
         color:#ff7220;
     }
 
+    .add-task-link{
+        color:rgb(19, 166, 19);
+    }
+    
+    .add-task-link:hover {
+        color:#36e762;
+    }
+
     .no-project {
         margin-top: 15vh;
     }
@@ -100,9 +104,17 @@
         .project-page-title {
             padding-bottom: 3rem;
             margin-left: 3rem;
+        }
+
+        .container {
+            max-width: 80%;
+        }
+
+        .tasks-in-box {
+            font-size: 18px;
+        }
     }
         
-    }
 
         /* For mobile devices */
     @media screen and (max-width: 767px) {
@@ -118,58 +130,67 @@
             padding-bottom: 3rem;
             text-align: center;
         }
+
+        .container {
+            max-width: 80%;
+        }
+
+        .tasks-in-box {
+            font-size: 18px;
+        }
+
     }
+
+    input[type=text] {
+			width: 100%;
+			box-sizing: border-box;
+			border: 1px solid #000000;
+            border-bottom: 1.5px solid #f686079e;
+			-webkit-transition: 0.5s;
+			transition: 0.5s;
+			outline: none;
+		}
 
 </style>
 
-{% if not projects %}
-
-<div  class="no-project">
-    <h1 class="text-center">No projects found.</h1>
-    <h3 class="text-center" style="color: #ddddddc5;">Start by creating a new project <a href="{{url_for('add_project')}}" class="here">here.</a></h3>
-</div>
-
-{% else %}
-
-<h2 class="code project-page-title"><span style="color: #f27cffd3">def </span>
-    <span style="color: rgba(255, 253, 159, 0.783);">Projects</span><span style="color: rgb(241, 185, 0);">()</span>
-</h2>
 
 <div class="container">
     <div class="row">
-        {% for project in projects %}
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-12">
             <div class="card shadow">
+                <form action="">
                 <div class="card-header">
                     <h4 class="my-0 fw-normal" style="font-family: 'Open Sans', sans-serif;"><span style="color:  #F68807;">{{ project.name }}</span></h4>
                 </div>
                 <div class="card-body">
-                    {% if project.description %}
+                    {% if not tasks %}
                     <ul class="list-unstyled mt-3 mb-4">
-                        <!-- Display project details, options, or tasks related to the project -->
-                        <li class="code" style="color:#dddddd;">{{project.description}}</li>
+                        <li class="code" style="color:#dddddd; text-align: center;">No tasks found. <a class="here" href="{{url_for('add_task', project_id = project.id, project_name = project.name)}}">Add Tasks</a> to get started.</li>
                     </ul>
-                    {% endif %}
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li><span class="code" style="color: rgb(19, 166, 19);"># Uncompleted Tasks:</span> {{ project.tasks|selectattr('completed', 'eq', false)|list|length }}</li>
-                    </ul>
-                    <a href="{{url_for('project_dashboard', project_id = project.id, project_name = project.name)}}"><button type="button" class="btn btn-sm btn-outline-primary">View Project</button></a>
-                    <span class="pr-2" style="background-color: transparent;"></span>
-                    <button type="button" class="btn btn-sm btn-outline-danger">Delete Project</button>
-                </div>
-                <div class="card-footer text-muted">
-                    {% set days_since_creation = (now() - project.created_at).days %}
-                    {% if days_since_creation == 0 %}
-                        <p>Created less than a day ago</p>
                     {% else %}
-                        <p>Created {{ days_since_creation }} day{{ 's' if days_since_creation > 1 else '' }} ago</p>
-                    {% endif %}    
+                    <ul class="list-unstyled mt-3 mb-3 tasks-in-box">
+                        {% for task in tasks %}
+                        <li class="code d-flex mt-3 mb-3">
+                            <div>
+                                <input class="mr-3" type="checkbox" value="{{ task.id }}" style="cursor: pointer;" {% if task.completed %}checked{% endif %}>
+                            </div>
+                            <div class="tasks" data-task-id="{{ task.id }}">
+                                <span class="edit-hover">{{ task.description }}</span>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    <li><a class="code add-task-link" style="text-decoration: none;" href="{{url_for('add_task', project_id = project.id, project_name = project.name)}}">// Add_Tasks <i class="fa-solid fa-plus"></i></a></li>
+                    </ul>
                 </div>
+                <div class="card-footer text-muted text-center">
+                    <a href="{{url_for('project_dashboard', project_id = project.id, project_name = project.name)}}"><button type="button" class="btn btn-sm btn-outline-primary">Save Progress</button></a>
+                </div>
+            </form>
             </div>
         </div>
-        {% endfor %}
+        {% endif %}
     </div>
 </div>
-{% endif %}
+
 
 {% endblock %}

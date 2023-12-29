@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add Task
+{% endblock %}
+
+{% block header %}
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="{{url_for('home')}}">Projects</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 user-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-regular fa-user"></i> {{username}}
+            </a>
+            <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
+
+                <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
+                <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
+                <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #F68807; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; font-weight: bold;">Log Out</a>
+
+            </div>
+        </li>
+    </ul>
+{% endblock %}
+
+
+{% block main %}
+
+<h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">def </span><span style="color: rgba(255, 253, 159, 0.783)">Add_Tasks</span><span style="color: rgb(241, 185, 0)">()</span></h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center">
+    <div class="alert alert-dismissible alert-danger text-center alert-pop">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message | safe }} <!-- Apply the 'safe' filter to render HTML -->
+    </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center">
+        <div class="col rounded p-4 shadow login-box pb-2">
+            <form class="add-task-form" method="post" action="{{ url_for('add_task', project_id=project.id, project_name=project.name) }}">
+                <div class="form-group mb-4">
+                    <input type="task" class="form-control mt-1" name="task[]" aria-describedby="task" placeholder="// Task 1">
+                </div>
+                <div class="login-button mb-4 d-grid gap-4">
+                    <button type="button" id="add-task-btn" class="btn btn-secondary" style="background-color:transparent; color: #ffffff; font-weight: 700;">New Task<i class="fa-solid fa-plus pl-2"></i></button>
+                    <button type="submit" class="btn" name="add-project-button" style="background-color:#F68807; color: #1e1e1e; font-weight: 700;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    let counter = 1; // Initial counter for additional tasks
+    
+    // Event listener for the "Add another task" button
+    $('#add-task-btn').click(function() {
+        counter++; // Increment counter
+        let newTaskInput = `<div class="form-group mb-4">
+                                <input type="task" class="form-control mt-1" name="task[]" aria-describedby="task" placeholder="// Task ${counter}">
+                            </div>`;
+        $('.form-group:last').after(newTaskInput); // Append new task input after the last task input field
+        });
+    });
+</script>
+
+{% endblock %}

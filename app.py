@@ -122,22 +122,52 @@ def home():
 
         projects = current_user.projects
         username = current_user.username
-        user_id = User.query.filter_by(username=username).first().id
 
         return render_template("home.html", projects=projects, username=username)
 
-@app.route("/<project>", methods=["GET", "POST"])
+@app.route("/project-<int:project_id>/<string:project_name>", methods=["GET", "POST"])
 @login_required
-def project_dashboard():
+def project_dashboard(project_id, project_name):
     if request.method == "POST":
         pass
     else:
-        projects = current_user.projects
+        project = Project.query.get_or_404(project_id)
+        tasks = Task.query.filter_by(project_id=project_id).all()
+        
+        return render_template("dashboard2.html", project=project, tasks=tasks, username=current_user.username)
+
+@app.route("/project-<int:project_id>/<string:project_name>/add-task", methods=["GET", "POST"])
+@login_required
+def add_task(project_id, project_name):
+    if request.method == "POST":
+
+        tasks = request.form.getlist('task[]')
+
+        for task in tasks:
+            if not task:
+                flash('Task cannot be empty.', 'input_error')
+                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
+            
+            if len(task) > 150:
+                flash('Task must be less than 150 characters.', 'input_error')
+                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
+            
+            if task.isspace():
+                task = None
+        
+            new_task = Task(description=task, project_id=project_id)
+
+            db.session.add(new_task)
+
+        db.session.commit()
+
+        return redirect(url_for("project_dashboard", project_id=project_id, project_name=project_name))
+    else:
+        project = Project.query.get_or_404(project_id)
         username = current_user.username
-
-        return render_template("dashboard.html", projects=projects, username=username, tasks=tasks)
-
-
+        
+        return render_template("add-task.html", project=project, username=username)
+    
 
 @app.route("/edit-task", methods=["GET", "POST", "DELETE"])
 @login_required
@@ -146,6 +176,7 @@ def edit():
         pass
     else:
         return render_template("dashboard.html", projects=projects, username=username)
+    
 
 @app.route("/add-proyect", methods=["GET", "POST"])
 @login_required
@@ -153,6 +184,11 @@ def add_project():
     if request.method == "POST":
         project_name = request.form.get('project')
         description = request.form.get('description')
+        user_projects = current_user.projects
+
+        if len(user_projects) >= 6:
+            flash("You have reached the maximum limit of projects. Please delete one to add a new project.", "warning")
+            return redirect(url_for("add_project"))      
 
         if not project_name:
             flash('Project cannot be empty.', 'input_error')

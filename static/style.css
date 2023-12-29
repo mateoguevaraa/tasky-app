@@ -88,7 +88,7 @@ p, body {
 }
 
 header, .code {
-    font-family: 'Fira Code', monospace;
+    font-family: 'Roboto Mono', monospace;
 }
 
 main {
@@ -145,15 +145,6 @@ main {
     margin-bottom: 3px;
 }
 
-.dropdown:hover>.dropdown-menu {
-    display: block;
-}
-
-.dropdown>.dropdown-toggle:active {
-    /*Without this, clicking will make it sticky*/
-    pointer-events: none;
-}
-
 .dropdown-menu {
     background-color: #2a2a2a74;
 }
@@ -168,7 +159,7 @@ main {
     visibility:hidden;
   }
 .edit_hover_class:hover a {
-visibility:visible;
+    visibility:visible;
 }
 
 .task-box {
