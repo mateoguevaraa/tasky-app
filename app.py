@@ -1,7 +1,7 @@
 from config import GOOGLE_RECAPTCHA_API_KEY, GOOGLE_RECAPTCHA_SITE_KEY, Tasky_secret_key
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
-from flask import Flask, session, redirect, render_template, request, flash, url_for, Markup, abort
+from flask import Flask, session, redirect, render_template, request, flash, url_for, Markup, abort, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -112,6 +112,10 @@ def inject_now():
 
 # Functioning of the web app
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
 @app.route("/home", methods=["GET", "POST"])
 @login_required
 def home():
@@ -129,12 +133,22 @@ def home():
 @login_required
 def project_dashboard(project_id, project_name):
     if request.method == "POST":
-        pass
+        # Get the list of completed task IDs from the form
+        completed_task_ids = request.form.getlist('completed_tasks[]', type=int)
+
+        # Update tasks as complete or incomplete in the database based on received IDs
+        tasks = Task.query.filter_by(project_id=project_id).all()
+        for task in tasks:
+            task.completed = task.id in completed_task_ids
+            db.session.commit()
+
+        return redirect(url_for('project_dashboard', project_id=project_id, project_name=project_name))
+
     else:
         project = Project.query.get_or_404(project_id)
         tasks = Task.query.filter_by(project_id=project_id).all()
-        
-        return render_template("dashboard2.html", project=project, tasks=tasks, username=current_user.username)
+
+        return render_template("dashboard.html", project=project, tasks=tasks, username=current_user.username)
 
 @app.route("/project-<int:project_id>/<string:project_name>/add-task", methods=["GET", "POST"])
 @login_required
@@ -145,21 +159,26 @@ def add_task(project_id, project_name):
 
         for task in tasks:
             if not task:
-                flash('Task cannot be empty.', 'input_error')
-                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
+                task = None
+                continue
+
+            if task.isspace():
+                task = None
+                continue
             
             if len(task) > 150:
                 flash('Task must be less than 150 characters.', 'input_error')
-                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
-            
-            if task.isspace():
-                task = None
+                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))      
         
             new_task = Task(description=task, project_id=project_id)
 
             db.session.add(new_task)
-
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            flash('An error occured while adding the tasks.', 'error')
+            return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
 
         return redirect(url_for("project_dashboard", project_id=project_id, project_name=project_name))
     else:
@@ -169,14 +188,69 @@ def add_task(project_id, project_name):
         return render_template("add-task.html", project=project, username=username)
     
 
-@app.route("/edit-task", methods=["GET", "POST", "DELETE"])
-@login_required
-def edit():
-    if request.method == "POST":
-        pass
+@app.route('/edit-task/<int:task_id>', methods=["GET", "POST"])
+def edit_task(task_id):
+    if request.method == 'POST':
+        task = Task.query.get(task_id)
+        project_id = task.project_id
+        project_name = Project.query.filter_by(id=project_id).first().name
+
+        new_description = request.form.get('task-edit')
+
+        if not new_description or new_description.isspace():
+            return redirect(url_for("project_dashboard", project_id=project_id, project_name=project_name))
+        
+        if len(new_description) > 150:
+            flash('Task must be less than 150 characters.', 'input_error')
+            return redirect(url_for('edit_task', task_id = task_id))      
+
+        task.description = new_description
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            flash('An error occured while editing the task. Try Again', 'error')
+            return redirect(url_for('edit_task', project_id=project_id, project_name=project_name))
+
+        try:
+            db.session.commit()
+        except:
+            db.session.rollback()
+            flash('An error occured while adding the tasks.', 'error')
+            return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
+        
+        return redirect(url_for("project_dashboard", project_id=project_id, project_name=project_name))
+
     else:
-        return render_template("dashboard.html", projects=projects, username=username)
+        task_info = Task.query.filter_by(id=task_id).first()
+        current_task_description = task_info.description
+        project_id = task_info.project_id
+        project_name = Project.query.filter_by(id=project_id).first().name
+
+        return render_template('edit-task.html', task_id=task_id, current_task_description=current_task_description, project_name=project_name, project_id=project_id)
     
+@app.route('/delete_task/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    task = Task.query.get(task_id)
+    if task:
+        # Perform deletion from the database using SQLAlchemy
+        db.session.delete(task)
+        db.session.commit()
+        return jsonify({'message': 'Task deleted successfully'})
+    else:
+        return jsonify({'error': 'Task not found'}), 404
+
+
+@app.route("/delete_project/<int:project_id>", methods=["DELETE"])
+@login_required
+def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
+
+    db.session.delete(project)
+    db.session.commit()
+
+    return jsonify({'message': 'Project deleted successfully'})
 
 @app.route("/add-proyect", methods=["GET", "POST"])
 @login_required

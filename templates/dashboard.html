@@ -1,174 +1,355 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Dashboard
+    {{project.name}}
 {% endblock %}
 
 {% block header %}
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Projects
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
-                <!-- List of projects -->
-                {% for project in projects %}
-                    <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">{{project.name}}</a>
-                {% endfor %}
-                <!-- ... -->
-                <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
-                <a class="dropdown-item code" href="{{url_for('add_project')}}" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Add Project</a>
-            </div>
-        </li>
-    </ul>
+<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <li class="nav-item">
+        <a class="nav-link" href="{{url_for('home')}}">Projects</a>
+    </li>
+</ul>
+
     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 user-nav">
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown account">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa-regular fa-user"></i> {{username}}
             </a>
             <div class="dropdown-menu account" aria-labelledby="navbarDropdownMenuLink" style="background-color: #0c0b0b; border:none;">
-                <!-- List of projects -->
+
                 <a class="dropdown-item" href="#" style="color: #dddddd; font-family: 'Open Sans', sans-serif; font-size: 0.9rem;">Settings</a>
                 <div class="dropdown-divider" style="background-color: #3c37378f;"></div>
                 <a class="dropdown-item" href="{{ url_for('logout') }}" style="color: #F68807; font-family: 'Open Sans', sans-serif; font-size: 0.9rem; font-weight: bold;">Log Out</a>
-                <!-- ... -->
+
             </div>
         </li>
     </ul>
 {% endblock %}
 {% block main %}
+
 <style>
-    @media screen and (max-width: 675px) {
-        .break {
-            display: block !important;
-            width: 100%;
+    
+    .card-header {
+        background-color: #111111;
+        color: #ffffff;
+        border-bottom: 1px solid #f6860783;
+        font-family: 'Fira Code', monospace;
+    }
+
+    .card-body {
+        background-color: #000000;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .card-footer {
+        background-color: #111111;
+        color: #ffffff;
+        font-family: 'Fira Code', monospace;
+    }
+
+    .btn-outline-primary {
+        border-color: #F68807;
+        color: #F68807;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #F68807;
+        color: #ffffff;
+        border:#ffffff
+    }
+
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #ffffff;
+    }
+
+    .card {
+        border: none;
+    }
+
+
+    .here{
+        color:#F68807;
+    }
+    
+    .here:hover {
+        color:#ff7220;
+    }
+
+    .add-task-link{
+        color:rgb(19, 166, 19);
+    }
+    
+    .add-task-link:hover {
+        color:#36e762;
+    }
+
+    .no-project {
+        margin-top: 15vh;
+    }
+
+    .project-page-title {
+        padding-bottom: 3rem;
+        margin-left: 3rem;
+    }
+
+    @media screen and (min-width: 1025px) {
+        .project-page-title {
+            padding-bottom: 3rem;
+            margin-left: 3rem;
         }
 
-        .add {
-            margin-left: 0 !important; 
+        .container {
+            max-width: 80%;
         }
 
-        .check {
-            vertical-align: top;
+        .tasks-in-box {
+            font-size: 18px;
+        }
+
+        .fa-trash, .fa-pen-to-square {
+            font-size: 0.8em;
+        }
+
+        .icon-trash {
+            margin-left: 18px;
+        }
+
+        .icon-div {
+            margin-left: 1.4em;
+        }
+    }
+        
+
+        /* For mobile devices */
+    @media screen and (max-width: 767px) {
+        .project-page-title {
+            padding-bottom: 3rem;
+            margin-left: 12px;
+        } 
+
+        .fa-trash, .fa-pen-to-square {
+            font-size: 0.8em;
+        }
+
+        .icon-trash {
+            margin-left: 14px;
+        }
+
+        .icon-div {
+            margin-left: 1.4em;
+        }
+    }
+
+    /* For tablets */
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        .project-page-title {
+            padding-bottom: 3rem;
             text-align: center;
-            margin: 0 auto;
         }
 
-        i {
-            padding-bottom: 8px;
-        }
-    }
-    @media screen and (max-width: 376px) {
-        .task-container {
-            display: block;
+        .container {
+            max-width: 80%;
         }
 
-        .task {
-            width: 100%;
+        .tasks-in-box {
+            font-size: 18px;
         }
 
-        .register-box {
-            padding: 1rem !important;
+        .fa-trash, .fa-pen-to-square {
+            font-size: 0.8em;
         }
-    }
 
-    .edit_hover_class {
-            max-width: 90%;
-    }
-
-    @media screen and (min-width: 576px)
-    {
-        main {
-            margin-left: 1rem;
-            margin-right: 1rem;
+        .icon-trash {
+            margin-left: 18px;
         }
+
+        .icon-div {
+            margin-left: 1.4em;
+        }
+
     }
 
-    .task-container {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        padding: 10px; /* Padding for each task item */
-        border-bottom: 1px solid #f686077a; /* Add a border between task items */
+    :root {
+    --form-control-color: #F68807;
+    --form-control-disabled: #959495;
     }
 
-    .task {
-        flex: 1 1 100%;
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-        word-break: break-word;
-        hyphens: auto;
-        margin: 0; /* Reset margin to avoid extra space */
+    *,
+    *:before,
+    *:after {
+    box-sizing: border-box;
     }
 
-    .ide {
-        padding: 10px; /* Add padding to the ide box */
+
+    input[type="checkbox"] {
+        /* Add if not using autoprefixer */
+        -webkit-appearance: none;
+        /* Remove most all native input styles */
+        appearance: none;
+        /* For iOS < 15 */
+        background-color: var(--form-background);
+        /* Not removed via appearance */
+        margin: 0;
+
+        font: inherit;
+        color: currentColor;
+        width: 1.15em;
+        height: 1.15em;
+        border: 0.15em solid currentColor;
+        border-radius: 0.15em;
+        transform: translateY(-0.075em);
+
+        display: grid;
+        place-content: center;
+
+        margin-top: 5px;
     }
 
-    .language {
-    color: white;
-    background-color: #131313;
-    padding: 12px 16px;
-    border-radius: 5px 5px 0 0;
-    text-align: left;
-  }
-
-    /* Remove border-bottom for the last task item */
-    .task-container:last-child {
-        border-bottom: none;
-        margin-bottom: 0 !important;
+    input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em var(--form-control-color);
+    /* Windows High Contrast Mode */
+    background-color: CanvasText;
     }
+
+    input[type="checkbox"]:checked::before {
+    transform: scale(1);
+    }
+
+    input[type="checkbox"]:focus {
+    outline: max(2px, 0.15em) solid currentColor;
+    outline-offset: max(2px, 0.15em);
+    }
+
+    .completed-task {
+        text-decoration: line-through;
+        /* Additional styling for completed tasks */
+    }
+
+    .tasks .completed-task {
+        text-decoration: line-through;
+        /* Apply line-through only to completed tasks within .tasks div */
+    }
+        
 
 </style>
 
-<div class="dashboard">
-    <div class="container-fluid">
-        <div class="row">
-            <p class="language code" id="language-copy"><span style="color: #f27cffd3">def </span>
-                <span style="color: rgb(93, 215, 255);">Project(</span><span>Tasky_app</span><span style="color: rgb(93, 215, 255);">)</span>
-            </p>
 
-            <!-- <div class="col-6 col-sm-6 d-flex align-items-center add" style="padding-bottom: 4rem;">
-                <h3 class="code ms-auto add" style="color: rgba(255, 253, 159, 0.783)">add_task</h3>
-                <a class="icon-link-hover pl-2 pb-2" href=""><i class="fa-solid fa-plus fa-lg pl-3 pb-2" style="color: rgba(231, 144, 255, 0.774);"></i></a>
-            </div> -->
-
-            <div class="col-12">
-                <div class="container-fluid rounded p-4 shadow task-box pb-4 ide">
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <form action="{{url_for('project_dashboard', project_id=project.id, project_name=project.name)}}" method="post">
                     {% if not tasks %}
-                        Add tasks
-                    {% else %}
-
-                    {% for task in tasks %}
-                    <div class="row justify-content-between h-100 task-container" style="align-items: center; margin-bottom: 10px;">
-                        <div class="col-1">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" style="cursor: pointer; border: 1.8px solid #f68607bc; background-color: transparent; box-shadow: none !important;">
-                        </div>
-                        </div>
-                        <div class="col-11 edit_hover_class">
-                            <ul class="list-group">
-                                <li class="code list-group-item d-flex align-items-center task" style="background-color: transparent !important; border: none; color:#dddddd">
-                                    <label class="ml-2" id="task">{{task.name}}</label>
-                                    <span class="badge badge-primary badge-pill ml-2 ms-auto" style="background-color: transparent; user-select:none">
-                                        <a class="icon-link" href=""><i class="fa-regular fa-pen-to-square" style="color: #F68807;"></i></a>
-                                        <span class="pr-3" style="background-color: transparent;"></span>
-                                        <a href="" class="icon-link"><i class="fa-solid fa-trash" style="color: #F68807;"></i></a>
-                                    </span>
-                                </li>
-                            </ul>
-                        </div>
+                    <div class="card-header">
+                        <h4 class="my-0 fw-normal" style="font-family: 'Open Sans', sans-serif;"><span style="color:  #F68807;">{{ project.name }}</span></h4>
                     </div>
+                    <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li class="code" style="color:#dddddd; text-align: center;">No tasks found. <a class="here" href="{{url_for('add_task', project_id = project.id, project_name = project.name)}}">Add Tasks</a> to get started.</li>
+                    </ul>
+                    {% else %}
+                    <div class="card-header">
+                        <h4 class="my-0 fw-normal" style="font-family: 'Open Sans', sans-serif;"><span style="color:  #F68807;">{{ project.name }}</span></h4>
+                    </div>
+                    <div class="card-body">
+                    <ul class="list-unstyled mt-3 mb-3 tasks-in-box">
+                        {% for task in tasks %}
+                        <li class="code d-flex mt-3 mb-3">
+                            <div class="line-number pr-3">
+                                {{ loop.index }}
+                            </div>
+                            <div>
+                                <input class="mr-3 task-checkbox" type="checkbox" name="completed_tasks[]" value="{{ task.id }}" data-task-id="{{ task.id }}" style="cursor: pointer;" {% if task.completed %}checked{% endif %}>
+                            </div>
+                            <div class="edit_hover_class d-flex">
+                            <div class="tasks" data-task-id="{{ task.id }}">
+                                <span class="task-descrption {% if task.completed %}completed-task{% endif %}" id="taskDescription_{{ task.id }}">{{ task.description }}</span>
+                            </div>
+                            <div class="icon-div d-flex">
+                                <span class=""><a class="icon-link" href="{{url_for('edit_task', task_id = task.id)}}"><i class="fa-solid fa-pen-to-square" style="color: #F68807;"></i></a></span>
+                                <span class="icon-trash"><a href="#" class="icon-link delete-task" data-task-id="{{ task.id }}"><i class="fa-solid fa-trash" style="color: #F68807;"></i></a></span>
+                            </div>
+                            </div>
+                        </li>
                     {% endfor %}
-
-                    {% endif %}
+                    <li><a class="code add-task-link" style="text-decoration: none;" href="{{url_for('add_task', project_id = project.id, project_name = project.name)}}">// Add_Tasks <i class="fa-solid fa-plus"></i></a></li>
+                    </ul>
                 </div>
+                <div class="card-footer text-muted text-center">
+                    <a href="{{url_for('project_dashboard', project_id = project.id, project_name = project.name)}}"><button type="submit" class="btn btn-sm btn-outline-primary">Save Progress</button></a>
+                </div>
+            </form>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
-</div>
+
+
+<script>
+
+    // JavaScript to handle checkbox change event
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkboxes = document.querySelectorAll('.task-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const taskId = this.getAttribute('data-task-id');
+                const taskDescription = document.getElementById('taskDescription_' + taskId);
+                if (this.checked) {
+                    taskDescription.style.textDecoration = 'line-through';
+                } else {
+                    taskDescription.style.textDecoration = 'none';
+                }
+            });
+        });
+    });
+
+    // JavaScript to handle delete task
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteIcons = document.querySelectorAll('.delete-task');
+        deleteIcons.forEach(icon => {
+            icon.addEventListener('click', function(event) {
+                event.preventDefault();
+                const taskId = this.getAttribute('data-task-id');
+                const confirmDelete = confirm('Are you sure you want to delete this task?');
+                if (confirmDelete) {
+                    deleteTask(taskId);
+                }
+            });
+        });
+    });
+
+    // Function to perform AJAX request to delete task
+    function deleteTask(taskId) {
+        fetch(`/delete_task/${taskId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // Reload the page or update the task list after deletion
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('There was an error deleting the task:', error);
+        });
+    }
+</script>
 
 {% endblock %}

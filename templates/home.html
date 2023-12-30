@@ -155,7 +155,7 @@
                     </ul>
                     <a href="{{url_for('project_dashboard', project_id = project.id, project_name = project.name)}}"><button type="button" class="btn btn-sm btn-outline-primary">View Project</button></a>
                     <span class="pr-2" style="background-color: transparent;"></span>
-                    <button type="button" class="btn btn-sm btn-outline-danger">Delete Project</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger delete-project-btn" data-project-id="{{ project.id }}">Delete Project</button>
                 </div>
                 <div class="card-footer text-muted">
                     {% set days_since_creation = (now() - project.created_at).days %}
@@ -171,5 +171,30 @@
     </div>
 </div>
 {% endif %}
+
+<script>
+    $(document).ready(function() {
+        $('.delete-project-btn').on('click', function() {
+            let projectId = $(this).data('project-id');
+
+            if (confirm("Are you sure you want to delete this project?")) {
+                $.ajax({
+                    url: '/delete_project/' + projectId,
+                    method: 'DELETE',
+                    success: function(response) {
+                        // Optionally, perform some action after successful deletion
+                        // For example, hide the deleted project card
+                        // $(this).closest('.card').remove();
+                        location.reload(); // Reload the page after deletion
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        // Handle errors if needed
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 {% endblock %}
