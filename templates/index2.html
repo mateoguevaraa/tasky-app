@@ -46,7 +46,7 @@
             <a class="nav-link" href="/login">Sign In</a>
         </li>
         <li class="nav-item" style="word-spacing: -4px;">
-            <a class="nav-link" href="/register"><button type="sign-up" style="word-spacing: -4px; font-weight: bold;" class="btn btn-sm btn-outline-light">Sign Up</button></a>
+            <a class="nav-link" href="/register"><button type="sign-up" style="word-spacing: -4px; font-weight: bold; max-width: fit-content;" class="btn btn-sm btn-outline-light">Sign Up</button></a>
         </li>
     </ul>
 {% endblock %}
@@ -114,22 +114,87 @@
         .button-container {
             margin-bottom: 34px;
         }
+        .hero-image-phone-1, .hero-image-phone-2 {
+            display: none;
+        }
         
     }
 
         /* For mobile devices */
     @media screen and (max-width: 767px) {
-        .project-page-title {
-            padding-bottom: 3rem;
-            margin-left: 12px;
-        } 
+        h1 {
+            font-size: 50px;
+            margin-bottom: 30px;
+            font-weight: 900;
+            line-height: 1.1em;
+            letter-spacing: -0.045em;
+            max-width: 400px;
+        }
+        .hero-page-subtitle {
+            line-height: 1.4em;
+            font-size: 18px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 35px;
+            max-width: 400px;
+            color: rgba(205, 205, 205, 0.784);
+        }
+        .button-hero {
+            border-radius: 10px;
+            padding: 0 21px;
+            height: 46px;
+            line-height: 46px;
+            max-width: fit-content;
+            margin: 0;
+        }
+
+        .button-container {
+            margin-bottom: 34px;
+        }
+
+        .hero-image {
+            display: none;
+        }
+
+        .hero-image-phone-2 {
+            margin-bottom: 30px;
+        }
     }
 
     /* For tablets */
     @media screen and (min-width: 768px) and (max-width: 1024px) {
-        .project-page-title {
+        h1 {
+            font-size: 50px;
             margin-bottom: 30px;
-            text-align: center;
+            font-weight: 900;
+            line-height: 1.1em;
+            letter-spacing: -0.045em;
+            max-width: 400px;
+        }
+        .hero-page-subtitle {
+            line-height: 1.4em;
+            font-size: 18px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 35px;
+            max-width: 400px;
+            color: rgba(205, 205, 205, 0.784);
+        }
+        .button-hero {
+            border-radius: 10px;
+            padding: 0 21px;
+            height: 46px;
+            line-height: 46px;
+            max-width: fit-content;
+            margin: 0;
+        }
+
+        .button-container {
+            margin-bottom: 34px;
+        }
+
+        .hero-image-phone-1, .hero-image-phone-2 {
+            display:none;
         }
     }
     </style>
@@ -137,14 +202,16 @@
 <!-- Hero Section -->
 <section class="container homepage-hero">
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-6 col-md-6">
         <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <img src="static\Tasky-task-management-image.jpg" alt="Tasky App Interface" class="img-fluid hero-image-phone-1">
+            <img src="static/Tasky-projects-image.png" alt="Tasky App Interface" class="img-fluid hero-image-phone-2">
             <h1 class="text-center">Unlock Dev efficiency with Tasky's tools!</h1>
             <p class="hero-page-subtitle text-center">Empower Your Projects with Tasky's Seamless Task Management</p>
             <button type="button" class="btn btn-outline-light button-hero"><a href="/register" style="text-decoration: none;color: black !important; font-weight: bold !important;">Sign up for free</a></button>
         </div>
     </div>
-      <div class="col-lg-6">
+      <div class="col-lg-6 col-md-6">
         <img src="static\Tasky-task-management-image.jpg" alt="Tasky App Interface" class="img-fluid hero-image">
         <img src="static/Tasky-projects-image.png" alt="Tasky App Interface" class="img-fluid hero-image">
       </div>
@@ -261,8 +328,9 @@
     font-size: 1.2rem;
     line-height: 1.6;
 }
-  </style>
-  <section class="container" id="#about" style="margin-top: 100px;">
+</style>
+
+  <section class="container" id="about" style="margin-top: 100px; max-width: 1000px;">
     <h2 class="section-title">Welcome to Tasky!</h2>
     <p class="section-description">
         Tasky is your ultimate companion for efficient project management in a developer-friendly environment. Our platform is tailored to streamline task organization, providing developers with an intuitive interface to manage project workflows effortlessly.
