@@ -1,7 +1,8 @@
 from config import GOOGLE_RECAPTCHA_API_KEY, GOOGLE_RECAPTCHA_SITE_KEY, Tasky_secret_key
 from datetime import datetime
 from email_validator import validate_email, EmailNotValidError
-from flask import Flask, session, redirect, render_template, request, flash, url_for, Markup, abort, jsonify
+from flask import Flask, session, redirect, render_template, request, flash, url_for, abort, jsonify
+from markupsafe import Markup
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
@@ -494,7 +495,7 @@ def register():
 def logout():
     session.clear()
     logout_user()
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 if __name__ == "__main__":
     app.run(debug=True)
