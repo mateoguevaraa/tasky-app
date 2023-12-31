@@ -54,7 +54,7 @@ class Project(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
-    tasks = db.relationship('Task', backref='projects', lazy=True)
+    tasks = db.relationship('Task', backref='projects', cascade='all, delete-orphan')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Task(db.Model):
@@ -116,18 +116,13 @@ def inject_now():
 def page_not_found(error):
     return render_template('404.html'), 404
 
-@app.route("/home", methods=["GET", "POST"])
+@app.route("/home", methods=["GET"])
 @login_required
 def home():
-    if request.method == "POST":
-        pass
+    projects = current_user.projects
+    username = current_user.username
 
-    else:
-
-        projects = current_user.projects
-        username = current_user.username
-
-        return render_template("home.html", projects=projects, username=username)
+    return render_template("home.html", projects=projects, username=username)
 
 @app.route("/project-<int:project_id>/<string:project_name>", methods=["GET", "POST"])
 @login_required
@@ -168,7 +163,12 @@ def add_task(project_id, project_name):
             
             if len(task) > 150:
                 flash('Task must be less than 150 characters.', 'input_error')
-                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))      
+                return redirect(url_for('add_task', project_id=project_id, project_name=project_name))
+
+            try:
+                task = task.capitalize()
+            except:
+                pass
         
             new_task = Task(description=task, project_id=project_id)
 
@@ -203,6 +203,11 @@ def edit_task(task_id):
         if len(new_description) > 150:
             flash('Task must be less than 150 characters.', 'input_error')
             return redirect(url_for('edit_task', task_id = task_id))      
+        
+        try:
+            new_description = new_description.capitalize()
+        except:
+            pass
 
         task.description = new_description
 
@@ -236,7 +241,11 @@ def delete_task(task_id):
     if task:
         # Perform deletion from the database using SQLAlchemy
         db.session.delete(task)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except:
+            return jsonify({'message': 'An error occured during task deletion'})
+        
         return jsonify({'message': 'Task deleted successfully'})
     else:
         return jsonify({'error': 'Task not found'}), 404
@@ -325,13 +334,13 @@ def add_project():
 
 
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["GET"])
 def index():
     if "username" in session:
         return redirect(url_for('home'))
     else:
         session.clear()
-        return render_template("index.html")
+        return render_template("index2.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

@@ -52,7 +52,7 @@
         <div class="col rounded p-4 shadow login-box pb-2">
             <form class="add-task-form" method="post" action="{{ url_for('add_task', project_id=project.id, project_name=project.name) }}">
                 <div class="form-group mb-4">
-                    <input type="task" class="form-control mt-1" name="task[]" aria-describedby="task" placeholder="// Task 1">
+                    <input type="task" class="form-control mt-1" name="task[]" aria-describedby="task" placeholder="// New task 1">
                 </div>
                 <div class="login-button mb-4 d-grid gap-4">
                     <button type="button" id="add-task-btn" class="btn btn-secondary" style="background-color:transparent; color: #ffffff; font-weight: 700;">New Task<i class="fa-solid fa-plus pl-2"></i></button>
@@ -72,7 +72,7 @@ $(document).ready(function() {
     $('#add-task-btn').click(function() {
         counter++; // Increment counter
         let newTaskInput = `<div class="form-group mb-4">
-                                <input type="task" class="form-control mt-1" name="task[]" aria-describedby="task" placeholder="// Task ${counter}">
+                                <input type="task" class="form-control mt-1" name="task[]" aria-describedby="task" placeholder="// New task ${counter}">
                             </div>`;
         $('.form-group:last').after(newTaskInput); // Append new task input after the last task input field
         });

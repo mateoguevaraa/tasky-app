@@ -1,22 +1,31 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Log in
+    Sign In
 {% endblock %}
 
 {% block header %}
+<style>
+    .btn-outline-primary {
+        border-color: #F68807;
+        color: #F68807;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #F68807;
+        color: #ffffff;
+        border:#ffffff
+    }
+</style>
 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-    <li class="nav-item">
-        <a class="nav-link" href="/register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="/login" aria-current="page">Login</a>
+    <li class="nav-item" style="word-spacing: -4px;">
+        <a class="nav-link" href="/register"><button type="login" style="word-spacing: -4px;" class="btn btn-sm btn-outline-primary">Sign Up</button></a>
     </li>
 </ul>
 {% endblock %}
 
 {% block main %}
-    <h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">function </span><span style="color: rgba(255, 253, 159, 0.783)">Login</span><span style="color: rgb(241, 185, 0)">()</span></h1>
+    <h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">function </span><span style="color: rgba(255, 253, 159, 0.783)">Sign_in</span><span style="color: rgb(241, 185, 0)">()</span></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -50,8 +59,9 @@
                         <small id="forgot-pw" class="form-text text-muted"><a href="#" style="color: #dddddd">Forgot password?</a></small>
                     </div>
                 </form>
-                <div class="d-flex align-items-center justify-content-center">
-                    <p class="code" style="color:rgba(0, 255, 0, 0.664)"># Don't have an account? <a href="/register" style="color:white">Register</a></p>
+                <hr style="color: #3e3d3d">
+                <div class="d-flex align-items-center justify-content-center pb-2">
+                    <small class="code" style="font-size: 0.8rem; word-spacing: -4px;">Dont't have an account? <a href="/register" style="color:#F68807; text-decoration: none;">Sign Up</a></small>
                 </div>
             </div>
         </div>

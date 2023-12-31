@@ -1,22 +1,31 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Register
+    Sign Up
 {% endblock %}
 
 {% block header %}
+<style>
+    .btn-outline-primary {
+        border-color: #F68807;
+        color: #F68807;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #F68807;
+        color: #ffffff;
+        border:#ffffff
+    }
+</style>
 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-    <li class="nav-item">
-        <a class="nav-link active" href="/register"  aria-current="page">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="/login">Login</a>
+    <li class="nav-item" style="word-spacing: -4px;">
+        <a class="nav-link" href="/login">Sign In</a>
     </li>
 </ul>
 {% endblock %}
 
 {% block main %}
-    <h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">def </span><span style="color: rgba(255, 253, 159, 0.783)">Register</span><span style="color: rgb(241, 185, 0)">()</span></h1>
+    <h1 class="text-center my-3 pb-1 code" style="font-size: 1rem; font-weight: 100; margin-bottom: 10px;"><span style="color: rgba(231, 144, 255, 0.774)">def </span><span style="color: rgba(255, 253, 159, 0.783)">Sign_Up</span><span style="color: rgb(241, 185, 0)">()</span></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
     {% for category, message in messages %}
@@ -47,13 +56,17 @@
                     <div class="form-group mb-4">
                         <input type="password" class="form-control mt-1" id="password-confirm" name="password-confirm" placeholder="// Confirm_Password">
                     </div>
-                    <div class="register-button mb-4 d-grid gap-4">
+                    <div class="register-button mb-4 d-grid">
                         <button type="submit" class="btn g-recaptcha" data-callback='onSubmit' 
                         data-action='submit'data-sitekey="{{GOOGLE_RECAPTCHA_SITE_KEY}}" 
-                        style="background-color:#F68807; color: #1e1e1e; font-weight: 700;">Register</button>
+                        style="background-color:#F68807; color: #1e1e1e; font-weight: 700;">Create your free account</button>
                     </div>
-                    <small id="forgot-pw" class="form-text" style="color: #F68807">* Password length must be between 5 and 20 characters</small>
+                    <small id="forgot-pw" class="form-text" style="color: #F68807; font-size: 0.75rem;">* Password length must be between 5 and 20 characters</small>
                 </form>
+                <hr style="color: #3e3d3d">
+                <div class="d-flex align-items-center justify-content-center pb-2">
+                    <small class="code" style="font-size: 0.8rem; word-spacing: -4px;">Already have an account? <a href="/login" style="color:#F68807; text-decoration: none;">Sign In</a></small>
+                </div>
             </div>
         </div>
     </div>

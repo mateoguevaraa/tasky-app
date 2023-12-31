@@ -1,0 +1,288 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Home
+{% endblock %}
+{% block header %}
+
+<style>
+    .btn {
+        display: block;
+        position: relative;
+        transition: box-shadow .1s,color .1s,background .1s;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        white-space: nowrap;
+        border: none;
+        text-decoration: none;
+        background: #F68807;
+        color: black !important;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .btn:hover {
+        background-color: #F68807;
+        color: #ffffff;
+    }
+
+    .btn:focus {
+        background-color: #fa7406 !important;
+        color: #ffffff;
+    }
+</style>
+
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#features">Features</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item" style="word-spacing: -4px;">
+            <a class="nav-link" href="/login">Sign In</a>
+        </li>
+        <li class="nav-item" style="word-spacing: -4px;">
+            <a class="nav-link" href="/register"><button type="sign-up" style="word-spacing: -4px; font-weight: bold;" class="btn btn-sm btn-outline-light">Sign Up</button></a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block main %}
+    <style>
+
+    .homepage-hero {
+        margin-bottom: 50px;
+    }
+
+    .card {
+        border: none;
+    }
+
+    .card-header {
+        background-color: #111111;
+        color: #ffffff;
+    }
+
+    .card-body {
+        background-color: #000000;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .card-footer {
+        background-color: #111111;
+        color: #ffffff;
+        font-family: 'Fira Code', monospace;
+    }
+
+    @media screen and (min-width: 1025px) {
+        .homepage-hero {
+            height: 570px
+        }
+
+        h1 {
+            font-size: 70px;
+            margin-bottom: 30px;
+            font-weight: 900;
+            line-height: 1.1em;
+            letter-spacing: -0.045em;
+            max-width: 500px;
+        }
+
+        .hero-page-subtitle {
+            line-height: 1.4em;
+            font-size: 18px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 35px;
+            max-width: 400px;
+            color: rgba(205, 205, 205, 0.784);
+        }
+
+        .button-hero {
+            border-radius: 10px;
+            padding: 0 21px;
+            height: 46px;
+            line-height: 46px;
+            max-width: fit-content;
+            margin: 0;
+        }
+
+        .button-container {
+            margin-bottom: 34px;
+        }
+        
+    }
+
+        /* For mobile devices */
+    @media screen and (max-width: 767px) {
+        .project-page-title {
+            padding-bottom: 3rem;
+            margin-left: 12px;
+        } 
+    }
+
+    /* For tablets */
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        .project-page-title {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+    }
+    </style>
+
+<!-- Hero Section -->
+<section class="container homepage-hero">
+    <div class="row">
+      <div class="col-lg-6">
+        <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <h1 class="text-center">Unlock Dev efficiency with Tasky's tools!</h1>
+            <p class="hero-page-subtitle text-center">Empower Your Projects with Tasky's Seamless Task Management</p>
+            <button type="button" class="btn btn-outline-light button-hero"><a href="/register" style="text-decoration: none;color: black !important; font-weight: bold !important;">Sign up for free</a></button>
+        </div>
+    </div>
+      <div class="col-lg-6">
+        <img src="static\Tasky-task-management-image.jpg" alt="Tasky App Interface" class="img-fluid hero-image">
+        <img src="static/Tasky-projects-image.png" alt="Tasky App Interface" class="img-fluid hero-image">
+      </div>
+    </div>
+</section>
+  <!-- Feature Cards Section -->
+  <section class="container" id="features">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header">
+                <img src="/static/macos-buttons.png" alt="macos-buttons-image" style="width: 40px; height: 11,7px;">
+            </div>
+            <div class="card-body">
+                <h4 class="my-0 fw-normal mb-2" style="font-family: 'Open Sans', sans-serif;"><span style="color:  #F68807;">Agile Task Organization</span></h4>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <!-- Display project details, options, or tasks related to the project -->
+                    <li class="code" style="color:#dddddd;">Stay agile with Tasky! Organize your tasks with a simple, intuitive interface. 
+                        Effortlessly create, prioritize, and update tasks for each project, adapting on-the-fly to meet your development needs.
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+            </div>
+        </div>
+        </div>
+        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header">
+                <img src="/static/macos-buttons.png" alt="macos-buttons-image" style="width: 40px; height: 11,7px;">
+            </div>
+            <div class="card-body">
+                <h4 class="my-0 fw-normal mt-2 mb-2" style="font-family: 'Open Sans', sans-serif;"><span style="color:  #F68807;">Developer-Oriented Interface</span></h4>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <!-- Display project details, options, or tasks related to the project -->
+                    <li class="code" style="color:#dddddd;">Tasky is designed for developers! With a coding-style interface, 
+                        manage tasks seamlessly in a familiar environment. Customize task details, track progress, and maintain a clear overview of your projects.
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+            </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card shadow">
+            <div class="card-header">
+                <img src="/static/macos-buttons.png" alt="macos-buttons-image" style="width: 40px; height: 11,7px;">
+            </div>
+            <div class="card-body">
+                <h4 class="my-0 fw-normal mt-2 mb-2" style="font-family: 'Open Sans', sans-serif;"><span style="color:  #F68807;">Enhanced Task Efficiency</span></h4>
+                <ul class="list-unstyled mt-3 mb-4">
+                    <!-- Display project details, options, or tasks related to the project -->
+                    <li class="code" style="color:#dddddd;">Boost your productivity! Tasky offers tools to enhance task efficiency, 
+                        including quick task creation, edit options, and project-focused task lists. 
+                        Effortlessly manage your workload and meet deadlines hassle-free.
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- About Section -->
+  <style>
+    .about-section {
+    margin-top: 100px;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color:#F68807;
+}
+
+.section-description {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 50px;
+    color: rgba(255, 255, 255, 0.748);
+}
+
+.feature-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.feature-list {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 50px;
+    color: rgba(255, 255, 255, 0.748);
+}
+
+.why-tasky {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.why-tasky-description {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.748);
+}
+
+.welcome-message {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+  </style>
+  <section class="container" id="#about" style="margin-top: 100px;">
+    <h2 class="section-title">Welcome to Tasky!</h2>
+    <p class="section-description">
+        Tasky is your ultimate companion for efficient project management in a developer-friendly environment. Our platform is tailored to streamline task organization, providing developers with an intuitive interface to manage project workflows effortlessly.
+    </p>
+
+    <h3 class="feature-title">Your Project. Your Tasks. Your Way.</h3>
+    <ul class="feature-list">
+        <li>Seamlessly organize tasks in a coding-style environment.</li>
+        <li>Prioritize and update tasks on-the-go for each project.</li>
+        <li>Enhance productivity with efficient task management tools.</li>
+    </ul>
+
+    <h3 class="why-tasky">Why Tasky?</h3>
+    <p class="why-tasky-description">
+        We understand the unique needs of developers. Tasky is designed to meet those needs head-on, offering a flexible, easy-to-use, and powerful tool to optimize your project management workflow.
+    </p>
+
+    <p class="welcome-message">Welcome aboard to a world of efficient task handling. Experience the difference with Tasky today!</p>
+</div>
+
+  </section>
+
+{% endblock %}
